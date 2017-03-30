@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="145dp"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:layout_height="match_parent"
+        android:id="@+id/image"
+        android:background="@drawable/n"
+        android:layout_width="120dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="Naruto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvName"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif"
+            android:textAlignment="center"
+            android:textColor="?attr/editTextColor"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:text="TV * Finished Airing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTypeStatus"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/common_google_signin_btn_text_light_focused"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/textView11"
+            android:background="@color/common_google_signin_btn_text_dark_disabled"
+            android:layout_marginLeft="5dp"
+            android:layout_height="3dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="0/0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEpisodes"
+                    android:textColor="@color/colorPrimary"
+                    android:textAlignment="center"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:text="Episodes Watched"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:id="@+id/textView10" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:fabSize="mini"
+                app:srcCompat="@android:color/transparent"
+                android:id="@+id/floatingActionButton2"
+                android:layout_weight="1"
+                app:backgroundTint="@android:color/holo_blue_dark"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="6dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="7.82"
+                android:elevation="16dp"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:textStyle="bold"
+                android:id="@+id/tvScore"
+                android:layout_marginRight="3dp" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

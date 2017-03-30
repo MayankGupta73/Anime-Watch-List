@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "53479533999",
+    "firebase_url": "https://anime-watch-list.firebaseio.com",
+    "project_id": "anime-watch-list",
+    "storage_bucket": "anime-watch-list.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53479533999:android:0b865186adf01363",
+        "android_client_info": {
+          "package_name": "com.example.mayankgupta.animewatchlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "53479533999-ls5uo6ggs0d1g8b9uk6equ2baae80pnh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mayankgupta.animewatchlist",
+            "certificate_hash": "2a95d353389ed36d634f37916698aa85a6886245"
+          }
+        },
+        {
+          "client_id": "53479533999-meq5p148atm3hajr3t2obrl47hmtg32a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgNQDT8JG3tFekBgmDtjIBASsTFhol8H8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53479533999-meq5p148atm3hajr3t2obrl47hmtg32a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

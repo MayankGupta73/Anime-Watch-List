@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        />
+    <item
+        android:title="My List"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+    <group android:checkableBehavior="single" android:menuCategory="container">
+        <menu>
+        <item
+            android:id="@+id/nav_current"
+            android:icon="@drawable/ic_currently_watching"
+            android:title="Currently Watching" />
+        <item
+            android:id="@+id/nav_on_hold"
+            android:icon="@drawable/ic_on_hold"
+            android:title="On Hold" />
+        <item
+            android:id="@+id/nav_completed"
+            android:icon="@drawable/ic_completed"
+            android:title="Completed" />
+        <item
+            android:id="@+id/nav_all"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="All" />
+    </menu>
+    </group>
+    </item>
+    <item
+        android:id="@+id/nav_reminder"
+        android:icon="@drawable/ic_rem"
+        android:title="Reminders"
+        />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        />
+    </group>
+
+</menu>
