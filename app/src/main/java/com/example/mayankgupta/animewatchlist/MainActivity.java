@@ -187,9 +187,9 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle("Completed");
         } else if (id == R.id.nav_all) {
             getSupportActionBar().setTitle("All");
-        }/*else if(id == R.id.nav_reminders){
+        }else if(id == R.id.nav_reminder){
             getSupportActionBar().setTitle("Anime Reminders");
-        }*/else if (id == R.id.nav_logout) {
+        }else if (id == R.id.nav_logout) {
             Log.d(TAG, "onOptionsItemSelected: logout");
             Toast.makeText(this,"Logged Out",Toast.LENGTH_SHORT).show();
             mAuth.signOut();

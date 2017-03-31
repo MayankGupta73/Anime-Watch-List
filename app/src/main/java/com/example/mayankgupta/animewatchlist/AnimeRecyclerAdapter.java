@@ -1,6 +1,7 @@
 package com.example.mayankgupta.animewatchlist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             @Override
             public void onClick(View v) {
                 //Pass intent to details activity
+                Intent i = new Intent(context,AnimeDetailActivity.class);
+                context.startActivity(i);
             }
         });
     }

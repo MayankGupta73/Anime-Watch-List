@@ -28,7 +28,11 @@
             android:label="@string/title_activity_login2" />
         <activity
             android:name=".SignupActivity"
-            android:label="@string/title_activity_signup"></activity>
+            android:label="@string/title_activity_signup" />
+        <activity
+            android:name=".AnimeDetailActivity"
+            android:label="@string/title_activity_anime_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
