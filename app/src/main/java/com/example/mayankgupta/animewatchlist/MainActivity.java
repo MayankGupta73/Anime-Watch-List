@@ -178,14 +178,17 @@ public class MainActivity extends AppCompatActivity
             return true;
 
         } else if (id == R.id.nav_current) {
-            fragment = new AnimeListFragment();
+            fragment = new CurrentFragment();
             getSupportActionBar().setTitle("Currently Watching");
 
         } else if (id == R.id.nav_on_hold) {
+            fragment = new OnHoldFragment();
             getSupportActionBar().setTitle("On Hold");
         } else if (id == R.id.nav_completed) {
+            fragment = new CompletedFragment();
             getSupportActionBar().setTitle("Completed");
         } else if (id == R.id.nav_all) {
+            fragment = new AnimeListFragment();
             getSupportActionBar().setTitle("All");
         }else if(id == R.id.nav_reminder){
             getSupportActionBar().setTitle("Anime Reminders");
