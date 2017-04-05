@@ -39,7 +39,7 @@ public class CompletedFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_completed, container, false);
         completedRecycler = (RecyclerView) rootView.findViewById(R.id.completedRecycler);
         completedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList);
+        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");
 
         completedRecycler.setAdapter(adapter);
         return rootView;

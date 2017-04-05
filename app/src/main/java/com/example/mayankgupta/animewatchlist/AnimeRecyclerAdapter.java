@@ -21,10 +21,12 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
     Context context;
     ArrayList<EntryShort> animeList;
+    String listType;
 
-    public AnimeRecyclerAdapter(Context context, ArrayList<EntryShort> animeList) {
+    public AnimeRecyclerAdapter(Context context, ArrayList<EntryShort> animeList, String listType) {
         this.context = context;
         this.animeList = animeList;
+        this.listType = listType;
     }
 
     @Override
@@ -49,6 +51,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             public void onClick(View v) {
                 //Pass intent to details activity
                 Intent i = new Intent(context,AnimeDetailActivity.class);
+                i.putExtra("listType",listType);
                 context.startActivity(i);
             }
         });

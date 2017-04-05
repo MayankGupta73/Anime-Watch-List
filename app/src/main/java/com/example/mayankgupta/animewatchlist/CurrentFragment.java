@@ -39,7 +39,7 @@ public class CurrentFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_current, container, false);
         currentRecycler = (RecyclerView) rootView.findViewById(R.id.currentRecycler);
         currentRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList);
+        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
 
         currentRecycler.setAdapter(adapter);
         return rootView;

@@ -39,7 +39,7 @@ public class OnHoldFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_on_hold, container, false);
         onHoldRecycler = (RecyclerView) rootView.findViewById(R.id.onHoldRecycler);
         onHoldRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),onHoldList);
+        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),onHoldList,"LIST_ON_HOLD");
 
         onHoldRecycler.setAdapter(adapter);
         return rootView;
