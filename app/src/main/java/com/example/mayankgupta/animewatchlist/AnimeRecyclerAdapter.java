@@ -37,13 +37,13 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(AnimeHolder holder, int position) {
+    public void onBindViewHolder(AnimeHolder holder, final int position) {
         EntryShort currentItem = animeList.get(position);
 
         holder.image.setImageResource(R.drawable.n);
         holder.tvName.setText(currentItem.getTitle());
         holder.tvTypeStatus.setText(currentItem.getType()+"*"+currentItem.getStatus());
-        holder.tvEpisodes.setText("0/"+String.valueOf(currentItem.getEpisodes()));
+        holder.tvEpisodes.setText(String.valueOf(currentItem.getEpisodeCount())+"/"+String.valueOf(currentItem.getEpisodes()));
         holder.tvScore.setText(String.valueOf(currentItem.getScore()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +52,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 //Pass intent to details activity
                 Intent i = new Intent(context,AnimeDetailActivity.class);
                 i.putExtra("listType",listType);
+                i.putExtra("position",position);
                 context.startActivity(i);
             }
         });

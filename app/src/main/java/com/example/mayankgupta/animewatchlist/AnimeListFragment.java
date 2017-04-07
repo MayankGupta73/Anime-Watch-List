@@ -27,13 +27,13 @@ public class AnimeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         animeList = new ArrayList<>();
-        animeList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(2,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(3,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(4,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(5,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(6,220,"Naruto","TV","Finished Airing",7.82f,null));
-        animeList.add(new EntryShort(7,220,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(2,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(3,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(4,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(5,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(6,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(7,220,0,"Naruto","TV","Finished Airing",7.82f,null));
 
         View rootView = inflater.inflate(R.layout.fragment_anime_list, container, false);
         animeRecycler = (RecyclerView) rootView.findViewById(R.id.animeRecycler);

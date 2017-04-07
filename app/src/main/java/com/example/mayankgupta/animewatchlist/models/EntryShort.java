@@ -8,13 +8,17 @@ import java.net.URL;
 
 public class EntryShort{
 
-    int id,episodes;
+    int id,episodes,episodeCount;
     String title, type, status;
     float score;
     URL image;
 
     public int getId() {
         return id;
+    }
+
+    public int getEpisodeCount(){
+        return episodeCount;
     }
 
     public int getEpisodes() {
@@ -41,14 +45,18 @@ public class EntryShort{
         return image;
     }
 
-    public EntryShort(int id, int episodes, String title, String type, String status, float score, URL image) {
+    public EntryShort(int id, int episodes,int episodeCount, String title, String type, String status, float score, URL image) {
         this.id = id;
         this.episodes = episodes;
         this.title = title;
         this.type = type;
-
+        this.episodeCount = episodeCount;
         this.status = status;
         this.score = score;
         this.image = image;
+    }
+
+    public EntryShort() {
+    //Empty constructor for firebase database.
     }
 }

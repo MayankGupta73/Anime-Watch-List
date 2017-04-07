@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -18,6 +23,8 @@ public class CurrentFragment extends Fragment {
 
     RecyclerView currentRecycler;
     ArrayList<EntryShort> currentList;
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
 
     public CurrentFragment() {
         // Required empty public constructor
@@ -28,13 +35,13 @@ public class CurrentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         currentList = new ArrayList<>();
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
 
         View rootView = inflater.inflate(R.layout.fragment_current, container, false);
         currentRecycler = (RecyclerView) rootView.findViewById(R.id.currentRecycler);
@@ -42,7 +49,12 @@ public class CurrentFragment extends Fragment {
         AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
 
         currentRecycler.setAdapter(adapter);
+        updateCurrentDB();
         return rootView;
+    }
+
+    void updateCurrentDB(){
+        mRef.child("users").child(uid).child("current_list").setValue(currentList);
     }
 
 }
