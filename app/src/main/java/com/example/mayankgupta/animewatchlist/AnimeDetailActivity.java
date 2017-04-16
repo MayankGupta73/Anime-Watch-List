@@ -14,27 +14,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.models.EntryShort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class AnimeDetailActivity extends AppCompatActivity {
 
-    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
 
     Button btnPlus,btnMinus;
     ImageView image;
     TextView tvName,tvType,tvStatus,tvWatchStatus,tvEpisodeCount,tvEpisodes,tvScore,tvDate,tvSynopsis;
 
     int episodesWatched = 0;  //Replace both by class member
-    int totalEpisodes = 220;
+    int totalEpisodes = 0;
     int position;
 
     String listType;
+    public static final String TAG = "AWL";
 
     public static final String Current = "LIST_CURRENT";
     public static final String Completed = "LIST_COMPLETED";
@@ -55,43 +62,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         listType = i.getStringExtra("listType");
         position = i.getIntExtra("position",0);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAdd);
-        if(listType == All){
-            fab.hide();
-        }
-        else fab.show();
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Make menu to add to list
-                PopupMenu popup = new PopupMenu(ctx,view);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case R.id.list_current: //TODO:
-                                return true;
-                            case R.id.list_completed: //TODO:
-                                return true;
-                            case R.id.list_on_hold: //TODO:
-                                return true;
-                            default: return false;
-                        }
-                    }
-                });
-
-                switch (listType){
-                    case NEW: popup.inflate(R.menu.menu_add); break;
-                    case Current: popup.inflate(R.menu.menu_current);
-                        break;
-                    case Completed: popup.inflate(R.menu.menu_completed);
-                        break;
-                    case OnHold: popup.inflate(R.menu.menu_on_hold);
-                        break;
-                }
-                popup.show();
-            }
-        });
 
         tvEpisodeCount = (TextView) findViewById(R.id.tvEpisodeCount);
         tvName = (TextView) findViewById(R.id.tvName);
@@ -105,6 +75,136 @@ public class AnimeDetailActivity extends AppCompatActivity {
         btnPlus = (Button) findViewById(R.id.btnPlus);
         btnMinus = (Button) findViewById(R.id.btnMinus);
         image = (ImageView) findViewById(R.id.image);
+
+        setTvWatchStatus(listType);
+
+        if(listType.equals(Completed)|| listType.equals(OnHold)){
+            btnMinus.setVisibility(View.INVISIBLE);
+            btnPlus.setVisibility(View.INVISIBLE);
+        }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAdd);
+        if(listType == All){
+            fab.hide();
+        }
+        else fab.show();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Make menu to add to list
+                PopupMenu popup = new PopupMenu(ctx,view);
+                switch (listType){
+                    case NEW: popup.inflate(R.menu.menu_add); break;
+                    case Current: popup.inflate(R.menu.menu_current);
+                        break;
+                    case Completed: popup.inflate(R.menu.menu_completed);
+                        break;
+                    case OnHold: popup.inflate(R.menu.menu_on_hold);
+                        break;
+                }
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(final MenuItem item) {
+                        Log.d(TAG, "onMenuItemClick: ");
+                        //final String list = getListTypeName(listType);
+                        final GenericTypeIndicator<ArrayList<EntryShort>> t = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
+
+                        // TODO: Add the NEW case in switch later.
+                        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                switch (item.getItemId()) {
+                                    case R.id.list_current:
+                                        switch (listType) {
+                                            case Completed:
+                                                ArrayList<EntryShort> newList;
+                                                EntryShort tempItem;
+                                                newList = dataSnapshot.child("completed_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                newList.remove(position);
+                                                mRef.child("completed_list").setValue(newList);
+                                                int pos = (int) dataSnapshot.child("current_list").getChildrenCount();
+                                                mRef.child("current_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+
+                                            case OnHold:
+                                                newList = dataSnapshot.child("on_hold_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                newList.remove(position);
+                                                mRef.child("on_hold_list").setValue(newList);
+                                                pos = (int) dataSnapshot.child("current_list").getChildrenCount();
+                                                mRef.child("current_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+                                        }
+                                        setTvWatchStatus(Current);
+                                        break;
+                                    case R.id.list_completed:
+                                        switch (listType) {
+                                            case Current:
+                                                ArrayList<EntryShort> newList;
+                                                EntryShort tempItem;
+                                                newList = dataSnapshot.child("current_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                tempItem.setEpisodeCount(tempItem.getEpisodes());
+                                                newList.remove(position);
+                                                mRef.child("current_list").setValue(newList);
+                                                int pos = (int) dataSnapshot.child("completed_list").getChildrenCount();
+                                                mRef.child("completed_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+
+                                            case OnHold:
+                                                newList = dataSnapshot.child("on_hold_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                tempItem.setEpisodeCount(tempItem.getEpisodes());
+                                                newList.remove(position);
+                                                mRef.child("on_hold_list").setValue(newList);
+                                                pos = (int) dataSnapshot.child("completed_list").getChildrenCount();
+                                                mRef.child("completed_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+                                        }
+                                        setTvWatchStatus(Completed);
+                                        break;
+                                    case R.id.list_on_hold:
+                                        switch (listType) {
+                                            case Current:
+                                                ArrayList<EntryShort> newList;
+                                                EntryShort tempItem;
+                                                newList = dataSnapshot.child("current_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                newList.remove(position);
+                                                mRef.child("current_list").setValue(newList);
+                                                int pos = (int) dataSnapshot.child("on_hold_list").getChildrenCount();
+                                                mRef.child("on_hold_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+
+                                            case Completed:
+                                                newList = dataSnapshot.child("completed_list").getValue(t);
+                                                tempItem = newList.get(position);
+                                                newList.remove(position);
+                                                mRef.child("completed_list").setValue(newList);
+                                                pos = (int) dataSnapshot.child("on_hold_list").getChildrenCount();
+                                                mRef.child("on_hold_list").child(String.valueOf(pos)).setValue(tempItem);
+                                                break;
+                                        }
+                                        setTvWatchStatus(OnHold);
+                                        break;
+                                    default: break;
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Toast.makeText(ctx,"Unable to make changes.Try again Later.",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
+
 
         mRef.child(getListTypeName(listType)).child(String.valueOf(position)).addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,6 +223,14 @@ public class AnimeDetailActivity extends AppCompatActivity {
         btnPlus.setOnClickListener(ocl);
         btnMinus.setOnClickListener(ocl);
 
+    }
+
+    void setTvWatchStatus(String listType){
+        switch (listType){
+            case Current: tvWatchStatus.setText("WATCHING"); break;
+            case Completed: tvWatchStatus.setText("COMPLETED"); break;
+            case OnHold: tvWatchStatus.setText("ON HOLD"); break;
+        }
     }
 
     String getListTypeName(String listType){

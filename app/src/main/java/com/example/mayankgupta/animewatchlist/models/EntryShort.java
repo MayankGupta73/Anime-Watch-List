@@ -45,7 +45,11 @@ public class EntryShort{
         return image;
     }
 
-    public EntryShort(int id, int episodes,int episodeCount, String title, String type, String status, float score, URL image) {
+    public void setEpisodeCount(int episodeCount) {
+        this.episodeCount = episodeCount;
+    }
+
+    public EntryShort(int id, int episodes, int episodeCount, String title, String type, String status, float score, URL image) {
         this.id = id;
         this.episodes = episodes;
         this.title = title;
