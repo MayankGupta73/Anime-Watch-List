@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         fragMan = getSupportFragmentManager();
         if(fragment == null){
             fragment = new HomeFragment();
-            setFragment(fragment);
+            setFragment(fragment,"Anime Watch List");
         }
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
@@ -204,34 +204,35 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        String title = null;
 
+        prevFragment = fragment;
         if (id == R.id.nav_home ) {
-            prevFragment = fragment;
             fragment = new HomeFragment();
-            getSupportActionBar().setTitle("Anime Watch List");
+            title = "Anime Watch List";
+
+        } else if(id == R.id.nav_stats) {
+            fragment = new StatsActivity();
+            title = "Statistics";
 
         } else if (id == R.id.nav_current) {
-            prevFragment = fragment;
             fragment = new CurrentFragment();
-            getSupportActionBar().setTitle("Currently Watching");
+            title = "Currently Watching";
 
         } else if (id == R.id.nav_on_hold) {
-            prevFragment = fragment;
             fragment = new OnHoldFragment();
-            getSupportActionBar().setTitle("On Hold");
+            title = "On Hold";
 
         } else if (id == R.id.nav_completed) {
-            prevFragment = fragment;
             fragment = new CompletedFragment();
-            getSupportActionBar().setTitle("Completed");
+            title = "Completed";
 
         } else if (id == R.id.nav_all) {
-            prevFragment = fragment;
             fragment = new AnimeListFragment();
-            getSupportActionBar().setTitle("All");
+            title = "All";
 
         }else if(id == R.id.nav_reminder){
-            getSupportActionBar().setTitle("Anime Reminders");
+            title = "Anime Reminders";
 
         }else if (id == R.id.nav_logout) {
             Log.d(TAG, "onOptionsItemSelected: logout");
@@ -241,7 +242,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-        setFragment(fragment);
+        setFragment(fragment,title);
         //Do stuff to change fragments here.
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    void setFragment(Fragment fragmentSwap){
+    void setFragment(Fragment fragmentSwap,String title){
         //fragmentSwap = fragment;
         //clearBackStack();
         fragTxn =fragMan.beginTransaction();
@@ -257,11 +258,7 @@ public class MainActivity extends AppCompatActivity
         fragTxn.remove(prevFragment);
 
         fragTxn.add(R.id.navFragment,fragmentSwap).commit();
+        getSupportActionBar().setTitle(title);
     }
-    void clearBackStack(){
-        if (fragMan.getBackStackEntryCount() > 0) {
-            FragmentManager.BackStackEntry first = fragMan.getBackStackEntryAt(0);
-            fragMan.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-    }
+
 }

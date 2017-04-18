@@ -2,12 +2,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mayankgupta.animewatchlist.StatsActivity">
+    tools:context="com.example.mayankgupta.animewatchlist.StatsActivity"
+    android:clickable="true"
+    android:background="@android:color/background_light">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <ProgressBar
+        android:id="@+id/progressLoader"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="Series Wise Statistics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView6"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_blue_dark" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:layout_width="match_parent"
+            android:id="@+id/pieChartMain"
+            android:layout_height="400dp"
+            android:layout_marginTop="20dp">
+
+        </com.github.mikephil.charting.charts.PieChart>
+
+        <TextView
+            android:text="Current: "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvCurrent"
+            android:padding="10dp"
+            android:textColor="@android:color/background_light"
+            android:background="@android:color/holo_green_light"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:text="On Hold:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvOnHold"
+            android:padding="10dp"
+            android:textColor="@android:color/background_light"
+            android:background="@android:color/holo_green_light"
+            android:layout_margin="2dp"/>
+
+        <TextView
+            android:text="Completed:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvCompleted"
+            android:padding="10dp"
+            android:textColor="@android:color/background_light"
+            android:background="@android:color/holo_green_light"
+            android:layout_margin="2dp"/>
+
+    </LinearLayout>
+    </ScrollView>
 </FrameLayout>
