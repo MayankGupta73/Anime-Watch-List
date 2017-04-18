@@ -12,7 +12,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.mayankgupta.animewatchlist.MainActivity"
     tools:showIn="@layout/app_bar_main"
-    android:background="?attr/colorButtonNormal">
+    android:background="#FF575656"
+    android:padding="5dp">
 
     <fragment
         android:layout_width="match_parent"
@@ -21,5 +22,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/navFragment" />
+        android:id="@+id/navFragment"
+        android:layout_margin="0dp" />
 </RelativeLayout>

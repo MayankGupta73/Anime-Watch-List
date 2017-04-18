@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -28,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 
@@ -40,6 +40,7 @@ public class CompletedFragment extends Fragment {
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
     SearchView searchView;
+    ProgressBar progressLoader;
 
     public CompletedFragment() {
         // Required empty public constructor
@@ -109,6 +110,7 @@ public class CompletedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("CF", "onCreateView: created");
         /*animeList = new ArrayList<>();
         animeList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
         animeList.add(new EntryShort(2,220,0,"Naruto","TV","Finished Airing",7.82f,null));
@@ -119,7 +121,15 @@ public class CompletedFragment extends Fragment {
         animeList.add(new EntryShort(7,220,0,"Naruto","TV","Finished Airing",7.82f,null));*/
 
         View rootView = inflater.inflate(R.layout.fragment_completed, container, false);
-        final ProgressBar progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("CF", "onTouch: ");
+                return true;
+            }
+        });
+        progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
+        progressLoader.setVisibility(View.VISIBLE);
         completedRecycler = (RecyclerView) rootView.findViewById(R.id.completedRecycler);
         /*completedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");

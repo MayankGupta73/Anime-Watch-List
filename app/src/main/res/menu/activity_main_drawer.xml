@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/menu_top">
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
         android:title="Home"
         />
     <item
+        android:id="@+id/nav_stats"
+        android:icon="@drawable/ic_action_stats"
+        android:title="Stats"
+        />
+    </group>
+    <item
         android:title="My List"
+        android:id="@+id/menu_list"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         >
-
-    <group android:checkableBehavior="single" android:menuCategory="container">
+    <group
+            android:menuCategory="container" >
         <menu>
         <item
             android:id="@+id/nav_current"
@@ -29,9 +36,12 @@
             android:id="@+id/nav_all"
             android:icon="@drawable/ic_menu_manage"
             android:title="All" />
-    </menu>
+        </menu>
     </group>
     </item>
+    <group
+        android:menuCategory="container"
+        android:id="@+id/menu_bottom">
     <item
         android:id="@+id/nav_reminder"
         android:icon="@drawable/ic_rem"
@@ -43,5 +53,4 @@
         android:title="Logout"
         />
     </group>
-
 </menu>

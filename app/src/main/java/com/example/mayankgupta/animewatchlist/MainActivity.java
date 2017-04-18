@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     FragmentManager fragMan;
     FragmentTransaction fragTxn;
-    Fragment fragment;
+    Fragment fragment = null, prevFragment=null;
 
     public static final String TAG = "MWL";
 
@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fragMan = getSupportFragmentManager();
+        if(fragment == null){
+            fragment = new HomeFragment();
+            setFragment(fragment);
+        }
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -202,32 +206,33 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home ) {
-            HomeFragment homeFragment = new HomeFragment();
-            if(fragment == null){
-                fragMan.beginTransaction().add(R.id.navFragment,homeFragment).commit();
-                fragment = homeFragment;
-            }
-            else fragMan.beginTransaction().replace(R.id.navFragment,homeFragment).commit();
+            prevFragment = fragment;
+            fragment = new HomeFragment();
             getSupportActionBar().setTitle("Anime Watch List");
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
 
         } else if (id == R.id.nav_current) {
+            prevFragment = fragment;
             fragment = new CurrentFragment();
             getSupportActionBar().setTitle("Currently Watching");
 
         } else if (id == R.id.nav_on_hold) {
+            prevFragment = fragment;
             fragment = new OnHoldFragment();
             getSupportActionBar().setTitle("On Hold");
+
         } else if (id == R.id.nav_completed) {
+            prevFragment = fragment;
             fragment = new CompletedFragment();
             getSupportActionBar().setTitle("Completed");
+
         } else if (id == R.id.nav_all) {
+            prevFragment = fragment;
             fragment = new AnimeListFragment();
             getSupportActionBar().setTitle("All");
+
         }else if(id == R.id.nav_reminder){
             getSupportActionBar().setTitle("Anime Reminders");
+
         }else if (id == R.id.nav_logout) {
             Log.d(TAG, "onOptionsItemSelected: logout");
             Toast.makeText(this,"Logged Out",Toast.LENGTH_SHORT).show();
@@ -236,12 +241,27 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-
+        setFragment(fragment);
         //Do stuff to change fragments here.
-        fragMan.beginTransaction().replace(R.id.navFragment,fragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    void setFragment(Fragment fragmentSwap){
+        //fragmentSwap = fragment;
+        //clearBackStack();
+        fragTxn =fragMan.beginTransaction();
+        if(prevFragment!=null)
+        fragTxn.remove(prevFragment);
+
+        fragTxn.add(R.id.navFragment,fragmentSwap).commit();
+    }
+    void clearBackStack(){
+        if (fragMan.getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry first = fragMan.getBackStackEntryAt(0);
+            fragMan.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 }
