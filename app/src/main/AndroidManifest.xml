@@ -32,7 +32,13 @@
         <activity
             android:name=".AnimeDetailActivity"
             android:label="@string/title_activity_anime_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PickerActivity" />
+
+        <receiver
+            android:name=".ReminderBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#303235"
+    android:layout_margin="5dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="07:30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTime"
+            android:textColor="@android:color/white"
+            android:textSize="48sp"
+            android:layout_marginLeft="15dp"
+            android:fontFamily="serif"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:text="PM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvAP"
+            android:textColor="@android:color/white"
+            android:fontFamily="serif"
+            android:textSize="18sp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:background="@drawable/delete"
+            android:layout_marginTop="5dp"
+            android:baselineAlignBottom="true"
+            android:layout_marginRight="15dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Naruto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvAnimeName"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:layout_marginLeft="26dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="serif" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:text="Repeat Daily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvRRule"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:gravity="right|end"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"/>
+    </LinearLayout>
+
+</LinearLayout>
