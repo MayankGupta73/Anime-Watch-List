@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.fragments;
 
 
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mayankgupta.animewatchlist.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;

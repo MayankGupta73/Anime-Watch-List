@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.fragments;
 
 
 import android.os.Bundle;
@@ -13,14 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.adapters.AnimeRecyclerAdapter;
+import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,15 +33,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class CurrentFragment extends Fragment {
+public class CompletedFragment extends Fragment {
 
-    RecyclerView currentRecycler;
-    ArrayList<EntryShort> currentList;
+    RecyclerView completedRecycler;
+    ArrayList<EntryShort> animeList;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
     SearchView searchView;
+    ProgressBar progressLoader;
 
-    public CurrentFragment() {
+    public CompletedFragment() {
         // Required empty public constructor
     }
 
@@ -65,11 +68,11 @@ public class CurrentFragment extends Fragment {
                 public boolean onQueryTextSubmit(String query) {
                     searchView.clearFocus();
                     if(query.isEmpty()){
-                        Toast.makeText(getContext(),"Enter a query",Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getContext(),"Enter a query",Toast.LENGTH_SHORT).show();
                         return true;
                     }
                     ArrayList<EntryShort> searchList = new ArrayList<EntryShort>();
-                    for(EntryShort entry:currentList){
+                    for(EntryShort entry:animeList){
                         if(query.trim().equalsIgnoreCase(entry.getTitle()) || entry.getTitle().toLowerCase().contains(query.toLowerCase())){
                             searchList.add(entry);
                         }
@@ -79,7 +82,7 @@ public class CurrentFragment extends Fragment {
                         return true;
                     }
                     AnimeRecyclerAdapter adapterSearch = new AnimeRecyclerAdapter(getContext(),searchList,"LIST_COMPLETED");
-                    currentRecycler.setAdapter(adapterSearch);
+                    completedRecycler.setAdapter(adapterSearch);
                     return true;
                 }
 
@@ -96,8 +99,8 @@ public class CurrentFragment extends Fragment {
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
-                    AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_COMPLETED");
-                    currentRecycler.setAdapter(adapter);
+                    AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");
+                    completedRecycler.setAdapter(adapter);
                     return true;
                 }
             });
@@ -107,35 +110,43 @@ public class CurrentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*currentList = new ArrayList<>();
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));*/
+        Log.d("CF", "onCreateView: created");
+        /*animeList = new ArrayList<>();
+        animeList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(2,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(3,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(4,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(5,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(6,220,0,"Naruto","TV","Finished Airing",7.82f,null));
+        animeList.add(new EntryShort(7,220,0,"Naruto","TV","Finished Airing",7.82f,null));*/
 
-        View rootView = inflater.inflate(R.layout.fragment_current, container, false);
-        final ProgressBar progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
-        currentRecycler = (RecyclerView) rootView.findViewById(R.id.currentRecycler);
-        /*currentRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
+        View rootView = inflater.inflate(R.layout.fragment_completed, container, false);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("CF", "onTouch: ");
+                return true;
+            }
+        });
+        progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
+        progressLoader.setVisibility(View.VISIBLE);
+        completedRecycler = (RecyclerView) rootView.findViewById(R.id.completedRecycler);
+        /*completedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");
 
-        currentRecycler.setAdapter(adapter);*/
+        completedRecycler.setAdapter(adapter);*/
 //        updateCurrentDB();
 
 
-
-        mRef.child("users").child(uid).child("current_list").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRef.child("users").child(uid).child("completed_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<ArrayList<EntryShort>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
-                currentList = dataSnapshot.getValue(genericTypeIndicator);
-                currentRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-                AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
+                animeList = dataSnapshot.getValue(genericTypeIndicator);
+                completedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");
 
-                currentRecycler.setAdapter(adapter);
+                completedRecycler.setAdapter(adapter);
                 progressLoader.setVisibility(View.GONE);
 
             }
@@ -151,7 +162,7 @@ public class CurrentFragment extends Fragment {
 
 
     void updateCurrentDB(){
-        mRef.child("users").child(uid).child("current_list").setValue(currentList);
+        mRef.child("users").child(uid).child("completed_list").setValue(animeList);
     }
 
 }

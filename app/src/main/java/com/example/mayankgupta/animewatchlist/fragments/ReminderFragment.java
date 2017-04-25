@@ -1,25 +1,25 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.fragments;
 
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.activities.PickerActivity;
+import com.example.mayankgupta.animewatchlist.R;
+import com.example.mayankgupta.animewatchlist.ReminderBroadcastReceiver;
 import com.example.mayankgupta.animewatchlist.models.Reminder;
-import com.example.mayankgupta.animewatchlist.models.ReminderRecycler;
+import com.example.mayankgupta.animewatchlist.adapters.ReminderRecycler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

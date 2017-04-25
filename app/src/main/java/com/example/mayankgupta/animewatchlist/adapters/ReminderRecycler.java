@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist.models;
+package com.example.mayankgupta.animewatchlist.adapters;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.ReminderBroadcastReceiver;
+import com.example.mayankgupta.animewatchlist.models.Reminder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

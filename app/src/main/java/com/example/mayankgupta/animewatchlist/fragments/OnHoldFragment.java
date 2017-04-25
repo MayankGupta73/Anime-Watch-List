@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.fragments;
 
 
 import android.os.Bundle;
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.adapters.AnimeRecyclerAdapter;
+import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

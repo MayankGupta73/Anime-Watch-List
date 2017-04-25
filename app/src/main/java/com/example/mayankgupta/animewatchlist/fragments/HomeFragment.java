@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.mayankgupta.animewatchlist.R;
 
 
 public class HomeFragment extends Fragment {

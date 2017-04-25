@@ -1,4 +1,4 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mayankgupta.animewatchlist.R;
+import com.example.mayankgupta.animewatchlist.activities.AnimeDetailActivity;
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,9 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.example.mayankgupta.animewatchlist.AnimeDetailActivity.Completed;
-import static com.example.mayankgupta.animewatchlist.AnimeDetailActivity.Current;
-import static com.example.mayankgupta.animewatchlist.AnimeDetailActivity.OnHold;
+import static com.example.mayankgupta.animewatchlist.activities.AnimeDetailActivity.Completed;
+import static com.example.mayankgupta.animewatchlist.activities.AnimeDetailActivity.Current;
+import static com.example.mayankgupta.animewatchlist.activities.AnimeDetailActivity.OnHold;
 
 /**
  * Created by Mayank Gupta on 21-03-2017.

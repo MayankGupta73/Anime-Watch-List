@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.mayankgupta.animewatchlist.MainActivity"
+    tools:context="com.example.mayankgupta.animewatchlist.activities.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:background="#FF575656"
     android:padding="5dp">
@@ -18,7 +18,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.mayankgupta.animewatchlist.HomeFragment"
+        android:name="com.example.mayankgupta.animewatchlist.fragments.HomeFragment"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

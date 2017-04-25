@@ -1,40 +1,36 @@
-package com.example.mayankgupta.animewatchlist;
+package com.example.mayankgupta.animewatchlist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.R;
+import com.example.mayankgupta.animewatchlist.fragments.AnimeListFragment;
+import com.example.mayankgupta.animewatchlist.fragments.CompletedFragment;
+import com.example.mayankgupta.animewatchlist.fragments.CurrentFragment;
+import com.example.mayankgupta.animewatchlist.fragments.HomeFragment;
+import com.example.mayankgupta.animewatchlist.fragments.OnHoldFragment;
+import com.example.mayankgupta.animewatchlist.fragments.ReminderFragment;
+import com.example.mayankgupta.animewatchlist.fragments.StatsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

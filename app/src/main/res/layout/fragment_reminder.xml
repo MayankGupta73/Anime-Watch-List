@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mayankgupta.animewatchlist.ReminderFragment"
+    tools:context="com.example.mayankgupta.animewatchlist.fragments.ReminderFragment"
     android:background="@android:color/background_light">
 
     <!-- TODO: Update blank fragment layout -->

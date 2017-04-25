@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mayankgupta.animewatchlist.CurrentFragment"
+    tools:context="com.example.mayankgupta.animewatchlist.fragments.CurrentFragment"
     android:background="@color/background_dim_overlay"
     android:clickable="true">
 
