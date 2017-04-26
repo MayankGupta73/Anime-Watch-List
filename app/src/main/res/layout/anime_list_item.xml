@@ -9,7 +9,6 @@
     <ImageView
         android:layout_height="match_parent"
         android:id="@+id/image"
-        android:background="@drawable/n"
         android:layout_width="100dp" />
 
     <LinearLayout

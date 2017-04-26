@@ -3,6 +3,7 @@ package com.example.mayankgupta.animewatchlist.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -47,42 +49,77 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     @Override
     public AnimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = li.inflate(R.layout.anime_list_item,parent,false);
+        View itemView;
+
+        if(viewType == 0)
+            itemView = li.inflate(R.layout.anime_list_item_img,parent,false);
+        else
+            itemView = li.inflate(R.layout.anime_list_item,parent,false);
+
         return new AnimeHolder(itemView);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        switch (listType){
+            case "LiST_HORIZONTAL": return 0;
+            case "LIST_NEW": return 1;
+            default: return 2;
+        }
     }
 
     @Override
     public void onBindViewHolder(final AnimeHolder holder, final int position) {
         final EntryShort currentItem = animeList.get(position);
 
-        holder.image.setImageResource(R.drawable.n);
+        Picasso.with(context)
+                .load(currentItem.getImage())
+                .fit()
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.drawable.n)
+                .into(holder.image);
+
+        Log.d("MW", "onBindViewHolder: "+currentItem.getImage());
+//        holder.image.setImageResource(R.drawable.n);
         holder.tvName.setText(currentItem.getTitle());
-        mRef.child(getListTypeName(listType)).child(String.valueOf(position)).child("episodeCount").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(int.class)!=null)
-                holder.tvEpisodes.setText(dataSnapshot.getValue(int.class).toString()+"/"+String.valueOf(currentItem.getEpisodes()));
+
+        if(getItemViewType(position) != 0) {
+            if (getItemViewType(position) == 2) {
+                mRef.child(getListTypeName(listType)).child(String.valueOf(position)).child("episodeCount").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue(int.class) != null)
+                            holder.tvEpisodes.setText(dataSnapshot.getValue(int.class).toString() + "/" + String.valueOf(currentItem.getEpisodes()));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                holder.tvEpisodes.setText(String.valueOf(currentItem.getEpisodeCount()) + "/" + String.valueOf(currentItem.getEpisodes()));
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            holder.tvTypeStatus.setText(currentItem.getType() + "*" + currentItem.getStatus());
+            if (getItemViewType(position) == 1) {
+                holder.tvEpisodes.setText(currentItem.getEpisodes() + " eps.");
+                holder.tvPopularity.setText("Popularity: " + currentItem.getPopularity());
             }
-        });
-        holder.tvTypeStatus.setText(currentItem.getType()+"*"+currentItem.getStatus());
-        holder.tvEpisodes.setText(String.valueOf(currentItem.getEpisodeCount())+"/"+String.valueOf(currentItem.getEpisodes()));
-        holder.tvScore.setText(String.valueOf(currentItem.getScore()));
+            holder.tvScore.setText(String.valueOf(currentItem.getScore()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Pass intent to details activity
-                Intent i = new Intent(context,AnimeDetailActivity.class);
-                i.putExtra("listType",listType);
-                i.putExtra("position",position);
-                context.startActivity(i);
-            }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Pass intent to details activity
+                    Intent i = new Intent(context, AnimeDetailActivity.class);
+                    i.putExtra("listType", listType);
+                    i.putExtra("position", position);
+                    context.startActivity(i);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -91,7 +128,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     }
 
     public class AnimeHolder extends RecyclerView.ViewHolder{
-        TextView tvName, tvTypeStatus, tvEpisodes, tvScore;
+        TextView tvName, tvTypeStatus, tvEpisodes, tvScore, tvPopularity;
         ImageView image;
         View itemView;
 
@@ -102,6 +139,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             tvTypeStatus = (TextView) itemView.findViewById(R.id.tvTypeStatus);
             tvEpisodes = (TextView) itemView.findViewById(R.id.tvEpisodes);
             tvScore = (TextView) itemView.findViewById(R.id.tvScore);
+            tvPopularity = (TextView) itemView.findViewById(R.id.tvPopularity);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
     }

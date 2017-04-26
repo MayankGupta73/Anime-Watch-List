@@ -6,10 +6,13 @@
     tools:context="com.example.mayankgupta.animewatchlist.fragments.HomeFragment"
     android:background="@android:color/background_light">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
     <LinearLayout
@@ -22,7 +25,7 @@
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_marginLeft="5dp"
             android:layout_width="80dp">
 
@@ -77,7 +80,7 @@
             app:srcCompat="@drawable/otaku"
             android:id="@+id/imageView2"
             android:layout_height="200dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_weight="1"
             android:layout_marginLeft="10dp" />
 
@@ -127,5 +130,33 @@
         android:background="#FF43B53F"
         android:layout_margin="5dp"
         android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="Seasonal Chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView14"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="Summer 2017"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSeason"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
+    </ScrollView>
 </FrameLayout>

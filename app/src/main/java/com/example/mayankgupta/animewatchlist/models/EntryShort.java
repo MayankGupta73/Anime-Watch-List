@@ -1,5 +1,7 @@
 package com.example.mayankgupta.animewatchlist.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.net.URL;
 
 /**
@@ -8,10 +10,27 @@ import java.net.URL;
 
 public class EntryShort{
 
-    int id,episodes,episodeCount;
-    String title, type, status;
+    int id;
+    int popularity;
+
+    @SerializedName("total_episodes")
+    int episodes;
+
+    int episodeCount;
+
+    @SerializedName("title_english")
+    String title;
+
+    String type;
+
+    @SerializedName("airing_status")
+    String status;
+
+    @SerializedName("average_score")
     float score;
-    URL image;
+
+    @SerializedName("image_url_lge")
+    String image;
 
     public int getId() {
         return id;
@@ -41,17 +60,22 @@ public class EntryShort{
         return score;
     }
 
-    public URL getImage() {
+    public String getImage() {
         return image;
+    }
+
+    public int getPopularity() {
+        return popularity;
     }
 
     public void setEpisodeCount(int episodeCount) {
         this.episodeCount = episodeCount;
     }
 
-    public EntryShort(int id, int episodes, int episodeCount, String title, String type, String status, float score, URL image) {
+    public EntryShort(int id, int episodes, int episodeCount,int popularity, String title, String type, String status, float score, String image) {
         this.id = id;
         this.episodes = episodes;
+        this.popularity = popularity;
         this.title = title;
         this.type = type;
         this.episodeCount = episodeCount;

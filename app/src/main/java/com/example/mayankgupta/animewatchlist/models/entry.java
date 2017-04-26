@@ -1,25 +1,57 @@
 package com.example.mayankgupta.animewatchlist.models;
 
-import java.net.URL;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 /**
  * Created by Mayank Gupta on 18-03-2017.
  */
 
 public class entry {
-    private int id,episodes;
-    private String title,synonyms,type,status;
-    private String start_date, end_date;
+    private int id;
+    private int duration;
+
+    @SerializedName("total_episodes")
+    private int episodes;
+
+    @SerializedName("title_english")
+    private String title;
+
+    private String type;
+    @SerializedName("airing_status")
+    private String status;
+
+    @SerializedName("start_date_fuzzy")
+    private String startDate;
+    @SerializedName("end_date_fuzzy")
+    private String endDate;
+
+    @SerializedName("average_score")
     private float score;
 
+    ArrayList<String> synonyms;
+    ArrayList<String> genres;
+
+    @SerializedName("description")
     String synopsis;
-    URL image;
+
+    @SerializedName("image_url_lge")
+    String image;
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public ArrayList<String> getGenres() {
+        return genres;
+    }
 
     public String getSynopsis() {
         return synopsis;
     }
 
-    public URL getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -36,7 +68,7 @@ public class entry {
         return title;
     }
 
-    public String getSynonyms() {
+    public ArrayList<String> getSynonyms() {
         return synonyms;
     }
 
@@ -48,29 +80,36 @@ public class entry {
         return status;
     }
 
-    public String getStart_date() {
-        return start_date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public String getEndDate() {
+        return endDate;
     }
 
     public float getScore() {
         return score;
     }
 
-    public entry(int id, int episodes, String title, String synonyms, String type, String status, String start_date, String end_date, float score, String synopsis, URL image) {
+    public entry(int id, int episodes,int duration, String title, ArrayList<String> synonyms, String type, String status, String startDate, String endDate, float score, String synopsis, String image, ArrayList<String> genres) {
         this.id = id;
         this.episodes = episodes;
+        this.duration = duration;
         this.title = title;
         this.synonyms = synonyms;
         this.type = type;
         this.status = status;
-        this.start_date = start_date;
-        this.end_date = end_date;
         this.score = score;
         this.synopsis = synopsis;
         this.image = image;
+        this.genres = genres;
+
+        this.startDate = formatDate(startDate);
+        this.endDate = formatDate(endDate);
+    }
+
+    private String formatDate(String date){
+        return date.substring(6,8) + "/" + date.substring(4,6) + "/" + date.substring(0,4);
     }
 }
