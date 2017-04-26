@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.mayankgupta.animewatchlist.fragments.HomeFragment"
-    android:background="@android:color/background_light">
+    android:background="#FF575656">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,6 +15,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/background_light">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -131,31 +136,52 @@
         android:layout_margin="5dp"
         android:textColor="@android:color/white" />
 
+    </LinearLayout>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="5dp">
 
                 <TextView
                     android:text="Seasonal Chart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView14"
-                    android:layout_weight="1" />
+                    android:id="@+id/textView14" />
 
                 <TextView
                     android:text="Summer 2017"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvSeason"
-                    android:layout_weight="1" />
+                    android:id="@+id/tvSeason" />
             </LinearLayout>
+
+            <TextView
+                android:text="See All ->"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvExpandSeasonal"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent" />
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/seasonalRecycler"
+            android:background="#FF575656" />
 
     </LinearLayout>
     </ScrollView>
