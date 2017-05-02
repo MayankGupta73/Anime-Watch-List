@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
     ImageView image;
     TextView tvName,tvType,tvStatus,tvWatchStatus,tvEpisodeCount,tvEpisodes,tvScore,tvDate,tvSynopsis,tvDuration, tvPopularity, tvGenres, tvSynonyms;
     ProgressBar progressLoader;
+    LinearLayout detailLayout;
 
     AnilistAPI anilistAPI;
     AnimeClient animeClient;
@@ -89,6 +91,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
         id = i.getIntExtra("id",1);
 
         progressLoader = (ProgressBar) findViewById(R.id.progressLoader);
+        detailLayout = (LinearLayout) findViewById(R.id.detail_layout);
         tvEpisodeCount = (TextView) findViewById(R.id.tvEpisodeCount);
         tvName = (TextView) findViewById(R.id.tvName);
         tvType = (TextView) findViewById(R.id.tvType);
@@ -106,6 +109,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
         btnMinus = (Button) findViewById(R.id.btnMinus);
         image = (ImageView) findViewById(R.id.image);
 
+        detailLayout.setVisibility(View.INVISIBLE);
         setTvWatchStatus(listType);
 
         anilistAPI = new AnilistAPI(this);
@@ -327,6 +331,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
                 entry animeDetails = response.body();
                 entryShort = new EntryShort(animeDetails);
                 anilistUrl = "https://anilist.co/anime/"+ animeDetails.getId();
+                detailLayout.setVisibility(View.VISIBLE);
                 setFields(animeDetails);
                 progressLoader.setVisibility(View.GONE);
             }
@@ -377,7 +382,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
         tvSynopsis.setText(animeDetails.getSynopsis());
         if(!(animeDetails.getEndDate()==null))
         tvDate.setText(animeDetails.getStartDate()+" to "+animeDetails.getEndDate());
-        else tvDate.setText(animeDetails.getStartDate()+" to current date");
+        else tvDate.setText(animeDetails.getStartDate()+" to ?");
 
         String genres = TextUtils.join(", ",animeDetails.getGenres());
         tvGenres.setText(genres);

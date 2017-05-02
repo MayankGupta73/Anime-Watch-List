@@ -131,7 +131,7 @@
         android:text="Check your stats !"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:id="@+id/btnToStats"
         android:background="#FF43B53F"
         android:layout_margin="5dp"
         android:textColor="@android:color/white" />
@@ -219,6 +219,43 @@
             android:background="#FF575656"
             android:layout_marginBottom="15dp"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:layout_height="50dp">
+
+            <TextView
+                android:text="Top Anime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView17"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="See All ->"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvExpandTop"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/topRecycler"
+            android:background="#FF575656"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
     </ScrollView>
 </FrameLayout>

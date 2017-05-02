@@ -2,6 +2,8 @@ package com.example.mayankgupta.animewatchlist.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mayankgupta.animewatchlist.R;
+import com.example.mayankgupta.animewatchlist.api.AnilistAPI;
+import com.example.mayankgupta.animewatchlist.api.AnimeClient;
 import com.example.mayankgupta.animewatchlist.fragments.AnimeListFragment;
 import com.example.mayankgupta.animewatchlist.fragments.CompletedFragment;
 import com.example.mayankgupta.animewatchlist.fragments.CurrentFragment;
@@ -32,6 +36,7 @@ import com.example.mayankgupta.animewatchlist.fragments.StatsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -116,11 +121,12 @@ public class MainActivity extends AppCompatActivity
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
 
-        String sampleXml = "<entry><id>20</id><title>Naruto</title><english>Naruto</english><synonyms>NARUTO</synonyms><episodes>220</episodes><score>7.82</score><type>TV</type><status>Finished Airing</status><start_date>2002-10-03</start_date><end_date>2007-02-08</end_date><synopsis>Moments prior to Naruto Uzumaki&#039;s birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi&#039;s rampage, the leader of the village, the Fourth Hokage, sacrificed his life and sealed the monstrous beast inside the newborn Naruto.<br />\n" +
+
+        /*String sampleXml = "<entry><id>20</id><title>Naruto</title><english>Naruto</english><synonyms>NARUTO</synonyms><episodes>220</episodes><score>7.82</score><type>TV</type><status>Finished Airing</status><start_date>2002-10-03</start_date><end_date>2007-02-08</end_date><synopsis>Moments prior to Naruto Uzumaki&#039;s birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi&#039;s rampage, the leader of the village, the Fourth Hokage, sacrificed his life and sealed the monstrous beast inside the newborn Naruto.<br />\n" +
                 "<br />\n" +
                 "Now, Naruto is a hyperactive and knuckle-headed ninja still living in Konohagakure. Shunned because of the Kyuubi inside him, Naruto struggles to find his place in the village, while his burning desire to become the Hokage of Konohagakure leads him not only to some great new friends, but also some deadly foes.<br />\n" +
                 "<br />\n" +
-                "[Written by MAL Rewrite]</synopsis><image>https://myanimelist.cdn-dena.com/images/anime/13/17405.jpg</image></entry>";
+                "[Written by MAL Rewrite]</synopsis><image>https://myanimelist.cdn-dena.com/images/anime/13/17405.jpg</image></entry>";*/
 
         /*JSONObject jsonObj = null;
         try {
@@ -186,9 +192,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id== R.id.action_search) {
 
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -237,6 +241,28 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
+        else if(id == R.id.nav_top || id == R.id.nav_popular || id == R.id.nav_seasonal ||id == R.id.nav_upcoming){
+            Intent intent = new Intent(MainActivity.this,AnimeListActivity.class);
+            intent.putExtra("getData",true);
+            switch (id){
+                case R.id.nav_top:
+                    intent.putExtra("type","Top Anime");
+                    break;
+                case R.id.nav_popular:
+                    intent.putExtra("type","Popular");
+                    break;
+                case R.id.nav_seasonal:
+                    intent.putExtra("type","Seasonal Chart");
+                    break;
+                case R.id.nav_upcoming:
+                    intent.putExtra("type","Upcoming");
+                    break;
+            }
+            startActivity(intent);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
         setFragment(fragment,title);
         //Do stuff to change fragments here.
 
@@ -245,15 +271,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    void setFragment(Fragment fragmentSwap,String title){
+    public void setFragment(Fragment fragmentSwap,String title){
         //fragmentSwap = fragment;
         //clearBackStack();
         fragTxn =fragMan.beginTransaction();
         if(prevFragment!=null)
         fragTxn.remove(prevFragment);
 
-        fragTxn.add(R.id.navFragment,fragmentSwap).commit();
+        fragTxn.add(R.id.navFragment,fragmentSwap);
+        fragTxn.commit();
         getSupportActionBar().setTitle(title);
     }
+
+
 
 }

@@ -2,32 +2,32 @@ package com.example.mayankgupta.animewatchlist.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.activities.AnimeListActivity;
+import com.example.mayankgupta.animewatchlist.activities.MainActivity;
 import com.example.mayankgupta.animewatchlist.adapters.AnimeRecyclerAdapter;
 import com.example.mayankgupta.animewatchlist.api.AnilistAPI;
 import com.example.mayankgupta.animewatchlist.api.AnimeClient;
 import com.example.mayankgupta.animewatchlist.models.AuthObj;
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,16 +42,17 @@ public class HomeFragment extends Fragment {
 
     public static final String TAG = "Anime Home";
 
-    RecyclerView seasonalRecycler, popularRecycler;
-    TextView tvExpandSeasonal, tvExpandPopular;
-    ArrayList<EntryShort> seasonalList, popularList;
+    RecyclerView seasonalRecycler, popularRecycler, topRecycler;
+    TextView tvExpandSeasonal, tvExpandPopular, tvExpandTop;
+    Button btnToStats, btnBrowse;
+    ArrayList<EntryShort> seasonalList, popularList, topList;
     Context ctx;
     TextView tvSeason;
     Calendar now;
     String accessToken;
     Boolean flagAccess = false;
     AnimeClient animeClient; AnilistAPI anilistAPI;
-    HashMap<String,String> queriesSeasonal,queriesPopular;
+    HashMap<String,String> queriesSeasonal,queriesPopular,queriesTop;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,53 +71,100 @@ public class HomeFragment extends Fragment {
         queriesPopular = new HashMap<>();
         queriesPopular.put("sort","popularity-desc");
 
+        queriesTop = new HashMap<>();
+        queriesTop.put("sort","score-desc");
+
         tvSeason = (TextView) rootView.findViewById(R.id.tvSeason);
         String season = getSeason(now.get(Calendar.MONTH)).substring(0,1).toUpperCase()+ getSeason(now.get(Calendar.MONTH)).substring(1);
         tvSeason.setText(season+" "+getYear(now.get(Calendar.YEAR)));
         seasonalRecycler = (RecyclerView) rootView.findViewById(R.id.seasonalRecycler);
         popularRecycler = (RecyclerView) rootView.findViewById(R.id.popularRecycler);
+        topRecycler = (RecyclerView) rootView.findViewById(R.id.topRecycler);
         tvExpandSeasonal = (TextView) rootView.findViewById(R.id.tvExpandSeasonal);
         tvExpandPopular = (TextView) rootView.findViewById(R.id.tvExpandPopular);
+        tvExpandTop = (TextView) rootView.findViewById(R.id.tvExpandTop);
+        btnToStats = (Button) rootView.findViewById(R.id.btnToStats);
+        btnBrowse = (Button) rootView.findViewById(R.id.btnBrowse);
 
         anilistAPI = new AnilistAPI(ctx);
         animeClient = anilistAPI.getAnimeClient();
         Log.d(TAG, "onCreateView: starting token access");
-        Log.d(TAG, "onCreateView: "+AnilistAPI.clientId+AnilistAPI.clientSecret+AnilistAPI.grantType);
-        if(!anilistAPI.ifTokenExists()) {
-            Log.d(TAG, "onCreateView: fetching token");
-            animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
-                    .enqueue(new Callback<AuthObj>() {
-                        @Override
-                        public void onResponse(Call<AuthObj> call, Response<AuthObj> response) {
-                            accessToken = response.body().getAccessToken();
-                            Log.d(TAG, "onResponse: " + accessToken);
-                            anilistAPI.writeToSharedPref(accessToken);
-                            if (!flagAccess){
-                                flagAccess = true;
-                                call.cancel();
-                                setDataRecycler();
+//        Log.d(TAG, "onCreateView: "+AnilistAPI.clientId+AnilistAPI.clientSecret+AnilistAPI.grantType);
+        if(isConnected()) {
+            if (!anilistAPI.ifTokenExists()) {
+                Log.d(TAG, "onCreateView: fetching token");
+                animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
+                        .enqueue(new Callback<AuthObj>() {
+                            @Override
+                            public void onResponse(Call<AuthObj> call, Response<AuthObj> response) {
+                                accessToken = response.body().getAccessToken();
+                                Log.d(TAG, "onResponse: " + accessToken);
+                                anilistAPI.writeToSharedPref(accessToken);
+                                if (!flagAccess) {
+                                    flagAccess = true;
+                                    call.cancel();
+                                    setSeasonalRecycler();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<AuthObj> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<AuthObj> call, Throwable t) {
+                                Toast.makeText(ctx, "Unable to access data. Check internet connection or try again later.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else {
+                accessToken = anilistAPI.getFromSharedPref();
+                Log.d(TAG, "onResponse: " + accessToken);
+                setSeasonalRecycler();
+            }
 
-                        }
-                    });
+            btnBrowse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(seasonalList == null){
+                        Toast.makeText(ctx,"Loading data is taking some time. Try again later.",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else if(seasonalList.isEmpty()){
+                        Toast.makeText(ctx,"Loading data is taking some time. Try again later.",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Intent i = new Intent(ctx,AnimeListActivity.class);
+                    i.putExtra("type","Seasonal Chart");
+                    i.putParcelableArrayListExtra("list",seasonalList);
+                    startActivity(i);
+                }
+            });
+
         }
         else {
-            accessToken = anilistAPI.getFromSharedPref();
-            Log.d(TAG, "onResponse: "+accessToken);
-            setDataRecycler();
+            Toast.makeText(ctx,"Not connected to the internet. Cannot load data.",Toast.LENGTH_SHORT).show();
         }
 
+        btnToStats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new StatsActivity();
+                String title = "Statistics";
+                ((MainActivity)getActivity()).setFragment(fragment,title);
+            }
+        });
         return rootView;
-
-
 
     }
 
-    void setDataRecycler(){
+    boolean isConnected(){
+        ConnectivityManager connMan = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connMan.getActiveNetworkInfo();
+
+        if(netInfo != null && netInfo.isConnected()){
+            return true;
+        }
+        return false;
+    }
+
+    void setSeasonalRecycler(){
         animeClient.browseAnime(accessToken,queriesSeasonal).enqueue(new Callback<ArrayList<EntryShort>>() {
             @Override
             public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
@@ -129,6 +177,18 @@ public class HomeFragment extends Fragment {
                 AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx,seasonalList,"LiST_HORIZONTAL");
 
                 seasonalRecycler.setAdapter(adapter);
+
+                tvExpandSeasonal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ctx,AnimeListActivity.class);
+                        i.putExtra("type","Seasonal Chart");
+                        i.putParcelableArrayListExtra("list",seasonalList);
+                        startActivity(i);
+                    }
+                });
+
+                setPopularRecycler();
             }
 
             @Override
@@ -136,6 +196,10 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+    }
+
+    void setPopularRecycler(){
         anilistAPI.getAnimeClient().browseAnime(accessToken,queriesPopular).enqueue(new Callback<ArrayList<EntryShort>>() {
             @Override
             public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
@@ -147,6 +211,18 @@ public class HomeFragment extends Fragment {
                 AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx,popularList,"LiST_HORIZONTAL");
 
                 popularRecycler.setAdapter(adapter);
+
+                tvExpandPopular.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ctx,AnimeListActivity.class);
+                        i.putExtra("type","Popular");
+                        i.putParcelableArrayListExtra("list",popularList);
+                        startActivity(i);
+                    }
+                });
+
+                setTopRecycler();
             }
 
             @Override
@@ -154,30 +230,41 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
 
-        tvExpandSeasonal.setOnClickListener(new View.OnClickListener() {
+    void setTopRecycler(){
+        anilistAPI.getAnimeClient().browseAnime(accessToken,queriesTop).enqueue(new Callback<ArrayList<EntryShort>>() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(ctx,AnimeListActivity.class);
-                i.putExtra("type","Seasonal Chart");
-                i.putParcelableArrayListExtra("list",seasonalList);
-                startActivity(i);
+            public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
+                topList = response.body();
+                if (topList == null)
+                    topList = new ArrayList<EntryShort>();
+
+                topRecycler.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
+                AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx,topList,"LiST_HORIZONTAL");
+
+                topRecycler.setAdapter(adapter);
+
+                tvExpandTop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ctx,AnimeListActivity.class);
+                        i.putExtra("type","Top Anime");
+                        i.putParcelableArrayListExtra("list",topList);
+                        startActivity(i);
+                    }
+                });
             }
-        });
 
-
-        tvExpandPopular.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(ctx,AnimeListActivity.class);
-                i.putExtra("type","Popular");
-                i.putParcelableArrayListExtra("list",popularList);
-                startActivity(i);
+            public void onFailure(Call<ArrayList<EntryShort>> call, Throwable t) {
+
             }
         });
     }
 
-    String getSeason(int month){
+
+    public static String getSeason(int month){
         switch (month){
             case 0:
             case 1:
@@ -195,7 +282,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    String getYear(int year){
+    public static String getYear(int year){
         return  String.valueOf(year);
     }
 }

@@ -28,10 +28,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/detail_layout">
 
         <TextView
-            android:text="Naruto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvName"
@@ -72,7 +72,6 @@
                 android:layout_weight="4">
 
                 <TextView
-                    android:text="WATCHING"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvWatchStatus"
@@ -103,7 +102,6 @@
                         android:textSize="24sp" />
 
                     <TextView
-                        android:text="0/220"
                         android:layout_height="wrap_content"
                         android:id="@+id/tvEpisodeCount"
                         android:layout_weight="1"
@@ -151,7 +149,6 @@
 
 
         <TextView
-            android:text="Action, Comedy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvGenres"
@@ -186,7 +183,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvType"
@@ -211,7 +207,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="220"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvEpisodes"
@@ -237,7 +232,6 @@
             android:padding="5dp" />
 
         <TextView
-            android:text="7.82"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvScore"
@@ -262,7 +256,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="7.82"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvPopularity"
@@ -287,7 +280,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="24 min per ep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvDuration"
@@ -312,7 +304,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="Finished Airing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvStatus"
@@ -337,7 +328,6 @@
                 android:padding="5dp" />
 
             <TextView
-                android:text="2002-10-3 to  2007-02-08"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvDate"
@@ -360,7 +350,6 @@
             android:layout_marginTop="10dp" />
 
         <TextView
-            android:text="Moments prior to Naruto Uzumaki's birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi's rampage, the leader of the village, the Fourth Hokage, sacrificed his life and sealed the monstrous beast inside the newborn Naruto. Now, Naruto is a hyperactive and knuckle-headed ninja still living in Konohagakure. Shunned because of the Kyuubi inside him, Naruto struggles to find his place in the village, while his burning desire to become the Hokage of Konohagakure leads him not only to some great new friends, but also some deadly foes.[Written by MAL Rewrite]"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvSynopsis"
@@ -381,7 +370,6 @@
 
 
         <TextView
-            android:text="Action, Comedy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvSynonyms"
