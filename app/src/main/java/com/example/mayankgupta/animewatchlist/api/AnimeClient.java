@@ -29,7 +29,7 @@ public interface AnimeClient {
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @GET("anime/{id}")
-    Call<entry> getAnimeDesc (@Query("access_token") String accessToken , @Path("id") int id);
+    Call<entry> getAnimeDesc (@Path("id") int id, @Query("access_token") String accessToken);
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @GET("browse/anime")

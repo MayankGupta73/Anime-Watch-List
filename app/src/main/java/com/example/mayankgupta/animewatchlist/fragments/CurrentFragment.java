@@ -108,14 +108,6 @@ public class CurrentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*currentList = new ArrayList<>();
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        currentList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));*/
 
         View rootView = inflater.inflate(R.layout.fragment_current, container, false);
         final ProgressBar progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
@@ -133,6 +125,7 @@ public class CurrentFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<ArrayList<EntryShort>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
                 currentList = dataSnapshot.getValue(genericTypeIndicator);
+                if(currentList == null) currentList = new ArrayList<EntryShort>();
                 currentRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                 AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
 

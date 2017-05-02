@@ -14,19 +14,19 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_height="match_parent"
-        android:layout_width="220dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_width="match_parent">
 
         <TextView
             android:text="Naruto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvName"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:fontFamily="sans-serif"
             android:textAlignment="center"
             android:textColor="?attr/editTextColor"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:textStyle="bold" />
 
@@ -49,6 +49,15 @@
             android:layout_marginBottom="5dp" />
 
         <TextView
+            android:text="Score: 77"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvScore"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
             android:text="Popularity: 14025"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,36 +66,5 @@
             android:textSize="12sp" />
 
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@android:color/transparent"
-            android:id="@+id/floatingActionButton2"
-            android:layout_weight="1"
-            app:backgroundTint="@android:color/holo_blue_dark"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="6dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="72"
-            android:elevation="16dp"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:textStyle="bold"
-            android:id="@+id/tvScore"
-            android:layout_marginRight="3dp" />
-    </FrameLayout>
 
 </LinearLayout>

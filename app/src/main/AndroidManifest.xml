@@ -38,7 +38,12 @@
         <receiver
             android:name=".ReminderBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity
+            android:name=".activities.AnimeListActivity"
+            android:label="@string/title_activity_anime_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

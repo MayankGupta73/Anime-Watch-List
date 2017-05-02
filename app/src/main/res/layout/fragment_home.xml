@@ -141,9 +141,9 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
             android:layout_marginTop="10dp"
-            android:background="@android:color/background_light">
+            android:background="@android:color/background_light"
+            android:layout_height="50dp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -179,10 +179,46 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
             android:id="@+id/seasonalRecycler"
-            android:background="#FF575656" />
+            android:background="#FF575656"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content" />
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:layout_height="50dp">
+
+            <TextView
+                android:text="Popular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView16"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="See All ->"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvExpandPopular"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/popularRecycler"
+            android:background="#FF575656"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content" />
     </LinearLayout>
     </ScrollView>
 </FrameLayout>

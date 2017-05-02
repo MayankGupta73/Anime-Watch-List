@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Size;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
         if(viewType == 0)
             itemView = li.inflate(R.layout.anime_list_item_img,parent,false);
+        else if (viewType == 1)
+            itemView = li.inflate(R.layout.anime_list_item_new,parent,false);
         else
             itemView = li.inflate(R.layout.anime_list_item,parent,false);
 
@@ -71,6 +75,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     @Override
     public void onBindViewHolder(final AnimeHolder holder, final int position) {
         final EntryShort currentItem = animeList.get(position);
+        if(currentItem == null)
+            return;
 
         Picasso.with(context)
                 .load(currentItem.getImage())
@@ -81,7 +87,14 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
         Log.d("MW", "onBindViewHolder: "+currentItem.getImage());
 //        holder.image.setImageResource(R.drawable.n);
-        holder.tvName.setText(currentItem.getTitle());
+        if(getItemViewType(position) == 0 && currentItem.getTitle().length()>31)
+            holder.tvName.setText(currentItem.getTitle().substring(0,30)+"...");
+        else if(getItemViewType(position) == 1 && currentItem.getTitle().length()>25) {
+            holder.tvName.setText(currentItem.getTitle().substring(0, 24) + "...");
+            holder.tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+        }else
+            holder.tvName.setText(currentItem.getTitle());
+
 
         if(getItemViewType(position) != 0) {
             if (getItemViewType(position) == 2) {
@@ -99,32 +112,38 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 });
 
                 holder.tvEpisodes.setText(String.valueOf(currentItem.getEpisodeCount()) + "/" + String.valueOf(currentItem.getEpisodes()));
+                holder.tvScore.setText(String.valueOf(currentItem.getScore()));
             }
 
             holder.tvTypeStatus.setText(currentItem.getType() + "*" + currentItem.getStatus());
             if (getItemViewType(position) == 1) {
                 holder.tvEpisodes.setText(currentItem.getEpisodes() + " eps.");
                 holder.tvPopularity.setText("Popularity: " + currentItem.getPopularity());
+                holder.tvScore.setText("Score: "+String.valueOf(currentItem.getScore()));
             }
-            holder.tvScore.setText(String.valueOf(currentItem.getScore()));
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Pass intent to details activity
                     Intent i = new Intent(context, AnimeDetailActivity.class);
                     i.putExtra("listType", listType);
+                    i.putExtra("id",currentItem.getId());
                     i.putExtra("position", position);
                     context.startActivity(i);
                 }
-            });
+            };
+            holder.itemView.setOnClickListener(ocl);
+            holder.image.setOnClickListener(ocl);
         }
 
     }
 
+
+
     @Override
     public int getItemCount() {
-        return animeList.size();
+        return animeList!=null ? animeList.size():0;
     }
 
     public class AnimeHolder extends RecyclerView.ViewHolder{

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class entry {
     private int id;
     private int duration;
+    int popularity;
 
     @SerializedName("total_episodes")
     private int episodes;
@@ -38,6 +39,10 @@ public class entry {
 
     @SerializedName("image_url_lge")
     String image;
+
+    public int getPopularity() {
+        return popularity;
+    }
 
     public int getDuration() {
         return duration;
@@ -81,21 +86,22 @@ public class entry {
     }
 
     public String getStartDate() {
-        return startDate;
+        return formatDate(startDate);
     }
 
     public String getEndDate() {
-        return endDate;
+        return formatDate(endDate);
     }
 
     public float getScore() {
         return score;
     }
 
-    public entry(int id, int episodes,int duration, String title, ArrayList<String> synonyms, String type, String status, String startDate, String endDate, float score, String synopsis, String image, ArrayList<String> genres) {
+    public entry(int id, int episodes,int duration,int popularity, String title, ArrayList<String> synonyms, String type, String status, String startDate, String endDate, float score, String synopsis, String image, ArrayList<String> genres) {
         this.id = id;
         this.episodes = episodes;
         this.duration = duration;
+        this.popularity = popularity;
         this.title = title;
         this.synonyms = synonyms;
         this.type = type;
@@ -105,11 +111,13 @@ public class entry {
         this.image = image;
         this.genres = genres;
 
-        this.startDate = formatDate(startDate);
-        this.endDate = formatDate(endDate);
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     private String formatDate(String date){
+        if(date == null)
+            return date;
         return date.substring(6,8) + "/" + date.substring(4,6) + "/" + date.substring(0,4);
     }
 }

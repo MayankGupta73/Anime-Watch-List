@@ -132,6 +132,7 @@ public class OnHoldFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<ArrayList<EntryShort>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
                 onHoldList = dataSnapshot.getValue(genericTypeIndicator);
+                if(onHoldList == null) onHoldList = new ArrayList<EntryShort>();
                 onHoldRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                 AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),onHoldList,"LIST_ON_HOLD");
 

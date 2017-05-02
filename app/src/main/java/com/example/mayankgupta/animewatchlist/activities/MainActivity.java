@@ -1,6 +1,7 @@
 package com.example.mayankgupta.animewatchlist.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -144,6 +145,10 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
+//        SharedPreferences.Editor sharedPrefEditor = this.getSharedPreferences(getString(R.string.preference_file_name),MODE_PRIVATE).edit();
+//        sharedPrefEditor.remove("access_token");
+//        sharedPrefEditor.remove("expiry_time");
+//        sharedPrefEditor.commit();
     }
 
     @Override
@@ -215,11 +220,12 @@ public class MainActivity extends AppCompatActivity
             fragment = new CompletedFragment();
             title = "Completed";
 
-        } else if (id == R.id.nav_all) {
+        } /*else if (id == R.id.nav_all) {
             fragment = new AnimeListFragment();
             title = "All";
 
-        }else if(id == R.id.nav_reminder){
+        }*/
+        else if(id == R.id.nav_reminder){
             fragment = new ReminderFragment();
             title = "Anime Reminders";
 

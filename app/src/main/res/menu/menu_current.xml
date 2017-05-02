@@ -6,4 +6,7 @@
     <item
         android:id="@+id/list_on_hold"
         android:title="Put on hold" />
+    <item
+        android:id="@+id/list_delete"
+        android:title="Remove from List" />
 </menu>

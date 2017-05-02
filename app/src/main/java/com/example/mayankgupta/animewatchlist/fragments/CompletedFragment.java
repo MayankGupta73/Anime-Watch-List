@@ -143,6 +143,7 @@ public class CompletedFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<ArrayList<EntryShort>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
                 animeList = dataSnapshot.getValue(genericTypeIndicator);
+                if(animeList == null) animeList = new ArrayList<EntryShort>();
                 completedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                 AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),animeList,"LIST_COMPLETED");
 

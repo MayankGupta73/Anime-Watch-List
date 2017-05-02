@@ -12,6 +12,19 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.mayankgupta.animewatchlist.activities.AnimeDetailActivity"
     tools:showIn="@layout/activity_anime_detail">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressLoader"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_gravity="center_horizontal" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,16 +54,16 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:weightSum="7"
-            android:padding="10dp">
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
                 android:id="@+id/image"
                 android:layout_weight="3"
-                android:layout_height="150dp"
                 android:padding="5dp"
-                android:background="@drawable/n"
-                android:layout_marginRight="10dp" />
+                android:layout_width="250dp"
+                android:layout_height="190dp"
+                android:layout_marginRight="5dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -68,7 +81,8 @@
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:fontFamily="sans-serif"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -123,6 +137,28 @@
             android:layout_weight="1"
             android:background="@color/common_google_signin_btn_text_light_disabled"
             android:layout_marginBottom="15dp" />
+
+        <TextView
+            android:text="Genres:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView13"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:background="@color/common_google_signin_btn_text_light_disabled"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginBottom="5dp" />
+
+
+        <TextView
+            android:text="Action, Comedy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvGenres"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:text="Information:"
@@ -211,7 +247,56 @@
             android:layout_gravity="end"
             android:padding="5dp" />
     </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
+            <TextView
+                android:text="Popularity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/background_dark"
+                android:padding="5dp" />
+
+            <TextView
+                android:text="7.82"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvPopularity"
+                android:layout_weight="1"
+                android:textColor="@android:color/background_dark"
+                android:textAlignment="textEnd"
+                android:layout_gravity="end"
+                android:padding="5dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="Duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/background_dark"
+                android:padding="5dp" />
+
+            <TextView
+                android:text="24 min per ep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvDuration"
+                android:layout_weight="1"
+                android:textColor="@android:color/background_dark"
+                android:textAlignment="textEnd"
+                android:layout_gravity="end"
+                android:padding="5dp" />
+        </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -282,5 +367,28 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:textColor="@android:color/black" />
+
+        <TextView
+            android:text="Synonyms:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView14"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:background="@color/common_google_signin_btn_text_light_disabled"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginBottom="5dp" />
+
+
+        <TextView
+            android:text="Action, Comedy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSynonyms"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="10dp" />
     </LinearLayout>
+    </FrameLayout>
 </ScrollView>
