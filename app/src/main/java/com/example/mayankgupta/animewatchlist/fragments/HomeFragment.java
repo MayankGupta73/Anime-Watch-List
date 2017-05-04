@@ -121,18 +121,10 @@ public class HomeFragment extends Fragment {
             btnBrowse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(seasonalList == null){
-                        Toast.makeText(ctx,"Loading data is taking some time. Try again later.",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    else if(seasonalList.isEmpty()){
-                        Toast.makeText(ctx,"Loading data is taking some time. Try again later.",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
 
                     Intent i = new Intent(ctx,AnimeListActivity.class);
-                    i.putExtra("type","Seasonal Chart");
-                    i.putParcelableArrayListExtra("list",seasonalList);
+                    i.putExtra("type","Search");
+                    i.putExtra("getData",true);
                     startActivity(i);
                 }
             });
@@ -152,6 +144,12 @@ public class HomeFragment extends Fragment {
         });
         return rootView;
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title",MainActivity.DEFAULT_TITLE);
     }
 
     boolean isConnected(){

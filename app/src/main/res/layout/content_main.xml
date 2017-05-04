@@ -15,7 +15,7 @@
     android:background="#FF575656"
     android:padding="5dp">
 
-    <fragment
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.example.mayankgupta.animewatchlist.fragments.HomeFragment"

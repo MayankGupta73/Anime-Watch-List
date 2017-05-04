@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.activities.MainActivity;
 import com.example.mayankgupta.animewatchlist.activities.PickerActivity;
 import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.ReminderBroadcastReceiver;
@@ -42,6 +43,7 @@ public class ReminderFragment extends Fragment {
     ArrayList<Reminder> reminders;
     RecyclerView reminderRecycler;
     ReminderRecycler adapter;
+    Context ctx;
 
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
@@ -68,12 +70,14 @@ public class ReminderFragment extends Fragment {
         reminderRecycler = (RecyclerView) rootView.findViewById(R.id.reminderRecycler);
         reminderRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        ctx = getActivity();
+
         mRef.child("reminders").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.hasChildren()){
                     reminders = new ArrayList<Reminder>();
-                    Toast.makeText(getContext(),"No reminders",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx,"No reminders",Toast.LENGTH_SHORT).show();
                 }
                 else {
                     GenericTypeIndicator<ArrayList<Reminder>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Reminder>>() {};
@@ -137,7 +141,7 @@ public class ReminderFragment extends Fragment {
                 time.set(year,month,day,hour,minute);
 
                 int id = newRem.getReminderId();
-                Toast.makeText(getContext(),"Alarm set for "+data.getStringExtra("Date")+" at "+data.getStringExtra("Time"),Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx,"Alarm set for "+data.getStringExtra("Date")+" at "+data.getStringExtra("Time"),Toast.LENGTH_SHORT).show();
                 AlarmManager am = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(getContext(),ReminderBroadcastReceiver.class);
                 intent.putExtra("Anime Name",animeName);

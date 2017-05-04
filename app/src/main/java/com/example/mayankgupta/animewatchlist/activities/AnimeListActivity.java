@@ -1,5 +1,6 @@
 package com.example.mayankgupta.animewatchlist.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -8,10 +9,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mayankgupta.animewatchlist.R;
@@ -36,16 +41,57 @@ public class AnimeListActivity extends AppCompatActivity {
     public static final String TAG = "List";
 
     RecyclerView listRecycler;
-    ArrayList<EntryShort> animeList= new ArrayList<>();
+    ArrayList<EntryShort> animeList;
     ProgressBar progressLoader;
+    SearchView searchView;
+    TextView tvSearchInfo;
 
     AnilistAPI anilistAPI;
     AnimeClient animeClient;
     String accessToken;
     boolean flagAccess = false;
+    boolean searchFlag = false;
 
     String type;
     Context ctx;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.d(TAG, "onPrepareOptionsMenu: ");
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_list, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        if(searchView == null)
+        Log.d(TAG, "onCreateOptionsMenu: added searchView");
+
+        if(searchFlag) {
+            setSearchView();
+            Log.d(TAG, "onCreateOptionsMenu: set searchFlag");
+        }
+        else searchView.setVisibility(View.INVISIBLE);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search:
+                Log.d(TAG, "onOptionsItemSelected: clicked");
+                //Do stuff
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +101,12 @@ public class AnimeListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         progressLoader = (ProgressBar) findViewById(R.id.progressLoader);
+        tvSearchInfo = (TextView) findViewById(R.id.tvSearchInfo);
+        tvSearchInfo.setVisibility(View.INVISIBLE);
 
         listRecycler = (RecyclerView) findViewById(R.id.listRecycler);
         listRecycler.setLayoutManager(new LinearLayoutManager(this));
+
 
         Intent i = getIntent();
         type = i.getStringExtra("type");
@@ -79,7 +128,17 @@ public class AnimeListActivity extends AppCompatActivity {
                                     accessToken = response.body().getAccessToken();
                                     Log.d(TAG, "onResponse: " + accessToken);
                                     anilistAPI.writeToSharedPref(accessToken);
-                                    setListRecycler(type);
+                                    if(type == "Search"){
+                                        progressLoader.setVisibility(View.INVISIBLE);
+                                        tvSearchInfo.setVisibility(View.VISIBLE);
+                                        searchFlag = true;
+                                        Log.d(TAG, "onResponse: set searchFlag");
+                                    }
+                                    else {
+                                        setListRecycler(type);
+                                        searchFlag = false;
+                                    }
+
                                     if (!flagAccess) {
                                         flagAccess = true;
                                         call.cancel();
@@ -94,9 +153,21 @@ public class AnimeListActivity extends AppCompatActivity {
                 } else {
                     accessToken = anilistAPI.getFromSharedPref();
                     Log.d(TAG, "onResponse: " + accessToken);
-                    setListRecycler(type);
-
+                    if(type.equals("Search")){
+                        progressLoader.setVisibility(View.INVISIBLE);
+                        tvSearchInfo.setVisibility(View.VISIBLE);
+                        searchFlag = true;
+                        Log.d(TAG, "onResponse: set searchFlag");
+                    }
+                    else{
+                        searchFlag = false;
+                        setListRecycler(type);
+                    }
                 }
+            }
+            else
+            {
+                Toast.makeText(ctx,"Unable to connect to the internet. Try again later.",Toast.LENGTH_SHORT).show();
             }
         }
         else {
@@ -106,7 +177,55 @@ public class AnimeListActivity extends AppCompatActivity {
             listRecycler.setAdapter(adapter);
             progressLoader.setVisibility(View.GONE);
         }
+
     }
+
+    void setSearchView(){
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                progressLoader.setVisibility(View.VISIBLE);
+                Log.d(TAG, "onQueryTextSubmit: query "+query);
+                if(query.isEmpty()){
+                    Toast.makeText(ctx,"Enter a query",Toast.LENGTH_SHORT).show();
+                    progressLoader.setVisibility(View.INVISIBLE);
+                    return true;
+                }
+
+                animeClient.searchAnime(query.trim(), accessToken).enqueue(new Callback<ArrayList<EntryShort>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
+                        animeList = response.body();
+
+                        if(animeList == null) animeList = new ArrayList<EntryShort>();
+                        if(animeList.isEmpty()){
+                            Toast.makeText(ctx,"No items match the query",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        AnimeRecyclerAdapter adapterSearch = new AnimeRecyclerAdapter(ctx,animeList,"LIST_NEW");
+                        listRecycler.setAdapter(adapterSearch);
+                        tvSearchInfo.setVisibility(View.INVISIBLE);
+                        progressLoader.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<EntryShort>> call, Throwable t) {
+
+                    }
+                });
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
     void setListRecycler(String listType){
         HashMap queries = new HashMap<>();
         Calendar now =Calendar.getInstance();
@@ -171,6 +290,8 @@ public class AnimeListActivity extends AppCompatActivity {
         listRecycler.setAdapter(adapter);
         progressLoader.setVisibility(View.GONE);
     }
+
+
 
     boolean isConnected(){
         ConnectivityManager connMan = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);

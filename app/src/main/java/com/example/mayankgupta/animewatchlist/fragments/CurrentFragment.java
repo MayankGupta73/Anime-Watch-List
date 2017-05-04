@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.mayankgupta.animewatchlist.activities.MainActivity;
 import com.example.mayankgupta.animewatchlist.adapters.AnimeRecyclerAdapter;
 import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.models.EntryShort;
@@ -37,7 +38,7 @@ public class CurrentFragment extends Fragment {
     RecyclerView currentRecycler;
     ArrayList<EntryShort> currentList;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mRef;
     SearchView searchView;
 
     public CurrentFragment() {
@@ -112,6 +113,7 @@ public class CurrentFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_current, container, false);
         final ProgressBar progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
         currentRecycler = (RecyclerView) rootView.findViewById(R.id.currentRecycler);
+        mRef = FirebaseDatabase.getInstance().getReference();
         /*currentRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(getContext(),currentList,"LIST_CURRENT");
 

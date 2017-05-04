@@ -1,6 +1,7 @@
 package com.example.mayankgupta.animewatchlist.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ public class StatsActivity extends Fragment {
     PieChart pieChartMain;
     TextView tvCurrent, tvOnHold, tvCompleted;
     ProgressBar progressLoader;
+    Context ctx;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
     float numCurrent, numOnHold, numCompleted;
@@ -46,6 +48,7 @@ public class StatsActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_stats,container,false);
 
+        ctx = getActivity();
         progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);
         progressLoader.setVisibility(View.VISIBLE);
 
@@ -74,7 +77,7 @@ public class StatsActivity extends Fragment {
                 entries.add(new PieEntry(numCompleted,"Completed"));
 
                 PieDataSet set = new PieDataSet(entries,"Series Status");
-                set.setColors(new int[] { R.color.blue, R.color.red, R.color.green}, getContext());
+                set.setColors(new int[] { R.color.blue, R.color.red, R.color.green}, ctx);
                 PieData data = new PieData(set);
                 pieChartMain.setData(data);
                 pieChartMain.setCenterText("Series Stats");

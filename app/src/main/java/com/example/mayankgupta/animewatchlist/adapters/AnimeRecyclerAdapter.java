@@ -133,7 +133,9 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     context.startActivity(i);
                 }
             };
+            if(getItemViewType(position) == 0) holder.tvName.setOnClickListener(ocl);
             holder.itemView.setOnClickListener(ocl);
+            holder.image.setClickable(true);
             holder.image.setOnClickListener(ocl);
         }
 

@@ -17,9 +17,11 @@
         android:id="@+id/menu_browse"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         >
-        <group
-            android:menuCategory="container" >
+            <group>
             <menu>
+                <item
+                    android:id="@+id/nav_search"
+                    android:title="Search Anime" />
                 <item
                     android:id="@+id/nav_top"
                     android:title="Top" />
@@ -34,7 +36,8 @@
                     android:title="Upcoming" />
 
             </menu>
-        </group>
+            </group>
+
     </item>
     <item
         android:title="My List"

@@ -1,10 +1,8 @@
 package com.example.mayankgupta.animewatchlist.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -24,9 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mayankgupta.animewatchlist.R;
-import com.example.mayankgupta.animewatchlist.api.AnilistAPI;
-import com.example.mayankgupta.animewatchlist.api.AnimeClient;
-import com.example.mayankgupta.animewatchlist.fragments.AnimeListFragment;
 import com.example.mayankgupta.animewatchlist.fragments.CompletedFragment;
 import com.example.mayankgupta.animewatchlist.fragments.CurrentFragment;
 import com.example.mayankgupta.animewatchlist.fragments.HomeFragment;
@@ -43,14 +38,26 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    public FirebaseDatabase mDatabase;
     TextView tvNavName;
     SearchView searchView;
+    public static String title;
+    static boolean dbCalledAlready = false;
+
+    public static final String DEFAULT_TITLE = "Anime Watch List";
+    public static final String STATS_TITLE = "Statistics";
+    public static final String CURRENT_TITLE = "Currently Watching";
+    public static final String ON_HOLD_TITLE = "On Hold";
+    public static final String COMPLETED_TITLE = "Completed";
+    public static final String REMINDER_TITLE = "Anime Reminders";
 
     FragmentManager fragMan;
     FragmentTransaction fragTxn;
     Fragment fragment = null, prevFragment=null;
 
     public static final String TAG = "MWL";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,21 +66,17 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragMan = getSupportFragmentManager();
-        if(fragment == null){
-            fragment = new HomeFragment();
-            setFragment(fragment,"Anime Watch List");
-        }
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        if(mDatabase == null) {
+//            mDatabase = FirebaseDatabase.getInstance();
+//            mDatabase.setPersistenceEnabled(true);
+//        }
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
-                    Log.d(TAG, "onAuthStateChanged: logged in");
                     String name = user.getDisplayName();
-                    Log.d(TAG, "onAuthStateChanged: username = "+name);
                     tvNavName.setText((name!=null)?name:"Otaku");
                     return;
                 }
@@ -117,8 +120,27 @@ public class MainActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         tvNavName = (TextView) header.findViewById(R.id.tvNavName);
 
+        fragMan = getSupportFragmentManager();
+
         if(savedInstanceState == null){
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        }
+
+        //In case rotated etc.
+        fragment = new HomeFragment();
+        title = DEFAULT_TITLE;
+        if(savedInstanceState == null){
+            setFragment(fragment,DEFAULT_TITLE);
+            if(!dbCalledAlready) {
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                dbCalledAlready = true;
+            }
+        }
+        else {
+            title = savedInstanceState.getString("title");
+            Log.d(TAG, "onCreate: title is "+title);
+            fragment = getFragment(title);
+            setFragment(fragment,title);
         }
 
 
@@ -151,10 +173,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
-//        SharedPreferences.Editor sharedPrefEditor = this.getSharedPreferences(getString(R.string.preference_file_name),MODE_PRIVATE).edit();
-//        sharedPrefEditor.remove("access_token");
-//        sharedPrefEditor.remove("expiry_time");
-//        sharedPrefEditor.commit();
     }
 
     @Override
@@ -165,6 +183,20 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(fragment == null) {
+            setFragment(getFragment(DEFAULT_TITLE), DEFAULT_TITLE);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title",title);
     }
 
     @Override
@@ -201,7 +233,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        String title = null;
 
         prevFragment = fragment;
         if (id == R.id.nav_home ) {
@@ -241,10 +272,13 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-        else if(id == R.id.nav_top || id == R.id.nav_popular || id == R.id.nav_seasonal ||id == R.id.nav_upcoming){
+        else /*if(id == R.id.nav_top || id == R.id.nav_popular || id == R.id.nav_seasonal ||id == R.id.nav_upcoming)*/{
             Intent intent = new Intent(MainActivity.this,AnimeListActivity.class);
             intent.putExtra("getData",true);
             switch (id){
+                case R.id.nav_search:
+                    intent.putExtra("type","Search");
+                    break;
                 case R.id.nav_top:
                     intent.putExtra("type","Top Anime");
                     break;
@@ -278,11 +312,25 @@ public class MainActivity extends AppCompatActivity
         if(prevFragment!=null)
         fragTxn.remove(prevFragment);
 
-        fragTxn.add(R.id.navFragment,fragmentSwap);
+        fragTxn.replace(R.id.navFragment,fragmentSwap);
         fragTxn.commit();
         getSupportActionBar().setTitle(title);
     }
 
-
+    Fragment getFragment(String type){
+        switch (type){
+            case STATS_TITLE:
+                return new StatsActivity();
+            case CURRENT_TITLE:
+                return new CurrentFragment();
+            case ON_HOLD_TITLE:
+                return new OnHoldFragment();
+            case COMPLETED_TITLE:
+                return new CompletedFragment();
+            case REMINDER_TITLE:
+                return new ReminderFragment();
+            default: return new HomeFragment();
+        }
+    }
 
 }

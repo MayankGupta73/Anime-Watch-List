@@ -25,7 +25,7 @@ public interface AnimeClient {
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @GET("anime/search/{query}")
-    Call<ArrayList<EntryShort>> searchAnime (@Query("access_token") String accessToken, @Path("query") String animeName );
+    Call<ArrayList<EntryShort>> searchAnime (@Path("query") String animeName, @Query("access_token") String accessToken);
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @GET("anime/{id}")
