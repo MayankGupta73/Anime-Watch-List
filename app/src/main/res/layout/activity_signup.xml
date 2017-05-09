@@ -55,6 +55,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_username"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="18sp"

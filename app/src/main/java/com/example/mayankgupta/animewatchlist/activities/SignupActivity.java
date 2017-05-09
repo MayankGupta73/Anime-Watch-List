@@ -36,8 +36,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class SignupActivity extends AppCompatActivity  {
 
 
-    private UserLoginTask mAuthTask = null;
-
+//    private UserLoginTask mAuthTask = null;
+    boolean mAuthTask = false;
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView,mUsernameView;
@@ -91,7 +91,7 @@ public class SignupActivity extends AppCompatActivity  {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mAuthTask == true) {
             return;
         }
 
@@ -103,7 +103,7 @@ public class SignupActivity extends AppCompatActivity  {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        String username = mUsernameView.getText().toString();
+        final String username = mUsernameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -134,8 +134,38 @@ public class SignupActivity extends AppCompatActivity  {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password,username);
-            mAuthTask.execute((Void) null);
+            mAuthTask = true;
+            mFirebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignupActivity.this,
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                setUsername(username);   //Sets the username
+
+                                mAuthTask = false;
+                                showProgress(false);
+                                Toast.makeText(SignupActivity.this,"Successfully Created Account",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else {
+                                mAuthTask = false;
+                                showProgress(false);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+                                builder.setMessage(task.getException().getMessage())
+                                        .setTitle("Sign Up Error")
+                                        .setPositiveButton("Ok", null);
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                        }
+                    });
+
+//            mAuthTask = new UserLoginTask(email, password,username);
+//            mAuthTask.execute((Void) null);
         }
     }
 
@@ -183,64 +213,27 @@ public class SignupActivity extends AppCompatActivity  {
         }
     }
 
-    /*@Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+    void setUsername(String username){
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(username)
+                .build();
 
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+        user.updateProfile(profileChangeRequest)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: Set the username for new user.");
+                        }
+                    }
+                });
     }
-*//*
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        *//*List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        //addEmailsToAutoComplete(emails);*//*
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-*/
-    /*private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(SignupActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }*/
-
-/*
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }*/
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
-     */
+     *//*
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -286,33 +279,18 @@ public class SignupActivity extends AppCompatActivity  {
             return false;
         }
 
-        void setUsername(String username){
-            FirebaseUser user = mFirebaseAuth.getCurrentUser();
-            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(username)
-                    .build();
 
-            user.updateProfile(profileChangeRequest)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Log.d(TAG, "onComplete: Set the username for new user.");
-                            }
-                        }
-                    });
-        }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+//            showProgress(false);
 
             if (success) {
                 finish();
             } else {
-                /*mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();*/
+                *//*mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();*//*
             }
         }
 
@@ -321,6 +299,6 @@ public class SignupActivity extends AppCompatActivity  {
             mAuthTask = null;
             showProgress(false);
         }
-    }
+    }*/
 }
 

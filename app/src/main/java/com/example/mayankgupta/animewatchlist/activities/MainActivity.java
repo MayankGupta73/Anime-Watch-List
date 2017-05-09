@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity
                 if(user != null){
                     String name = user.getDisplayName();
                     tvNavName.setText((name!=null)?name:"Otaku");
+                    initializeFragment(savedInstanceState);
                     return;
                 }
                 else{
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
-                    finish();
+//                    finish();
                 }
             }
         };
@@ -126,6 +127,10 @@ public class MainActivity extends AppCompatActivity
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
 
+
+    }
+
+    void initializeFragment(Bundle savedInstanceState){
         //In case rotated etc.
         fragment = new HomeFragment();
         title = DEFAULT_TITLE;
@@ -143,24 +148,6 @@ public class MainActivity extends AppCompatActivity
             setFragment(fragment,title);
         }
 
-
-        /*String sampleXml = "<entry><id>20</id><title>Naruto</title><english>Naruto</english><synonyms>NARUTO</synonyms><episodes>220</episodes><score>7.82</score><type>TV</type><status>Finished Airing</status><start_date>2002-10-03</start_date><end_date>2007-02-08</end_date><synopsis>Moments prior to Naruto Uzumaki&#039;s birth, a huge demon known as the Kyuubi, the Nine-Tailed Fox, attacked Konohagakure, the Hidden Leaf Village, and wreaked havoc. In order to put an end to the Kyuubi&#039;s rampage, the leader of the village, the Fourth Hokage, sacrificed his life and sealed the monstrous beast inside the newborn Naruto.<br />\n" +
-                "<br />\n" +
-                "Now, Naruto is a hyperactive and knuckle-headed ninja still living in Konohagakure. Shunned because of the Kyuubi inside him, Naruto struggles to find his place in the village, while his burning desire to become the Hokage of Konohagakure leads him not only to some great new friends, but also some deadly foes.<br />\n" +
-                "<br />\n" +
-                "[Written by MAL Rewrite]</synopsis><image>https://myanimelist.cdn-dena.com/images/anime/13/17405.jpg</image></entry>";*/
-
-        /*JSONObject jsonObj = null;
-        try {
-            jsonObj = XML.toJSONObject(sampleXml);
-        } catch (JSONException e) {
-            Log.e("JSON exception", e.getMessage());
-            e.printStackTrace();
-        }*/
-
-        /*Log.d(TAG, sampleXml);
-
-        Log.d(TAG, jsonObj.toString());*/
     }
 
     @Override

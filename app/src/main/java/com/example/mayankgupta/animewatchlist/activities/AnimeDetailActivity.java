@@ -136,13 +136,37 @@ public class AnimeDetailActivity extends AppCompatActivity {
                         }
                     });
         }
-        accessToken = anilistAPI.getFromSharedPref();
-        Log.d(TAG, "onResponse: "+accessToken);
-        setAnimeDetails();
+        else {
+            accessToken = anilistAPI.getFromSharedPref();
+            Log.d(TAG, "onResponse: " + accessToken);
+            setAnimeDetails();
+        }
+
         if(listType.equals(Completed)|| listType.equals(OnHold)){
             btnMinus.setVisibility(View.INVISIBLE);
             btnPlus.setVisibility(View.INVISIBLE);
         }
+        else {
+            btnPlus.setOnClickListener(ocl);
+            btnMinus.setOnClickListener(ocl);
+        }
+
+        mRef.child(getListTypeName(listType)).child(String.valueOf(position)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!(listType.equals(Horizontal) || listType.equals(NewItem))) {
+                    if(dataSnapshot.child("episodeCount").exists() || dataSnapshot.child("episodes").exists()) {
+                        episodesWatched = dataSnapshot.child("episodeCount").getValue(int.class);
+                        totalEpisodes = dataSnapshot.child("episodes").getValue(int.class);
+                        tvEpisodeCount.setText(String.valueOf(episodesWatched) + "/" + totalEpisodes);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAdd);
 
@@ -301,26 +325,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
             }
         });
 
-
-        mRef.child(getListTypeName(listType)).child(String.valueOf(position)).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!(listType.equals(Horizontal) || listType.equals(NewItem))) {
-                    if(dataSnapshot.child("episodeCount").exists() || dataSnapshot.child("episodes").exists()) {
-                        episodesWatched = dataSnapshot.child("episodeCount").getValue(int.class);
-                        totalEpisodes = dataSnapshot.child("episodes").getValue(int.class);
-                        tvEpisodeCount.setText(String.valueOf(episodesWatched) + "/" + totalEpisodes);
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        btnPlus.setOnClickListener(ocl);
-        btnMinus.setOnClickListener(ocl);
 
     }
 

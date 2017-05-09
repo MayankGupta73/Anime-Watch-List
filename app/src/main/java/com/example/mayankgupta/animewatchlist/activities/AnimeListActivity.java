@@ -101,6 +101,7 @@ public class AnimeListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         progressLoader = (ProgressBar) findViewById(R.id.progressLoader);
+        progressLoader.setVisibility(View.VISIBLE);
         tvSearchInfo = (TextView) findViewById(R.id.tvSearchInfo);
         tvSearchInfo.setVisibility(View.INVISIBLE);
 

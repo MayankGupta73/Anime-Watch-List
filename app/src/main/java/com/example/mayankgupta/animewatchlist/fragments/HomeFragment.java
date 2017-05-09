@@ -147,6 +147,14 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        seasonalRecycler.setAdapter(null);
+        popularRecycler.setAdapter(null);
+        topRecycler.setAdapter(null);
+        super.onDestroyView();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("title",MainActivity.DEFAULT_TITLE);

@@ -18,5 +18,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/completedRecycler"
-        android:background="#d6d7d7" />
+        android:background="#FF575656" />
 </FrameLayout>

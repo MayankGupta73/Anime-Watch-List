@@ -39,8 +39,6 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     ArrayList<EntryShort> animeList;
     String listType;
 
-    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
 
     public AnimeRecyclerAdapter(Context context, ArrayList<EntryShort> animeList, String listType) {
         this.context = context;
@@ -78,6 +76,12 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         if(currentItem == null)
             return;
 
+        String uid;
+        DatabaseReference mRef;
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+
         Picasso.with(context)
                 .load(currentItem.getImage())
                 .fit()
@@ -89,7 +93,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 //        holder.image.setImageResource(R.drawable.n);
         if(getItemViewType(position) == 0 && currentItem.getTitle().length()>31)
             holder.tvName.setText(currentItem.getTitle().substring(0,30)+"...");
-        else if(getItemViewType(position) == 1 && currentItem.getTitle().length()>25) {
+        else if(currentItem.getTitle().length()>25) {
             holder.tvName.setText(currentItem.getTitle().substring(0, 24) + "...");
             holder.tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
         }else
@@ -126,6 +130,11 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 @Override
                 public void onClick(View v) {
                     //Pass intent to details activity
+                    if(v == holder.image)
+                    Log.d("OL", "onClick: click registered image");
+                    if(v == holder.itemView)
+                        Log.d("OL", "onClick: click registered item view");
+
                     Intent i = new Intent(context, AnimeDetailActivity.class);
                     i.putExtra("listType", listType);
                     i.putExtra("id",currentItem.getId());
@@ -135,13 +144,16 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             };
             if(getItemViewType(position) == 0) holder.tvName.setOnClickListener(ocl);
             holder.itemView.setOnClickListener(ocl);
-            holder.image.setClickable(true);
             holder.image.setOnClickListener(ocl);
         }
 
     }
 
-
+    @Override
+    public void onViewRecycled(AnimeHolder holder) {
+        holder.cleanup();
+        super.onViewRecycled(holder);
+    }
 
     @Override
     public int getItemCount() {
@@ -162,6 +174,12 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             tvScore = (TextView) itemView.findViewById(R.id.tvScore);
             tvPopularity = (TextView) itemView.findViewById(R.id.tvPopularity);
             image = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+        public void cleanup(){
+            Picasso.with(image.getContext())
+                    .cancelRequest(image);
+            image.setImageDrawable(null);
         }
     }
 
