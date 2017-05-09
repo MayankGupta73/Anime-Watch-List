@@ -253,6 +253,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 if(dataSnapshot.child("completed_list").hasChildren())
                                                 pos = (int) dataSnapshot.child("completed_list").getChildrenCount();
                                                 else pos = 0;
+                                                entryShort.setEpisodeCount(entryShort.getEpisodes());
                                                 mRef.child("completed_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
 
