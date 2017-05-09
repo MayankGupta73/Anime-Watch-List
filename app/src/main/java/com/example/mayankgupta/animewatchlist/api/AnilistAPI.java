@@ -75,16 +75,13 @@ public class AnilistAPI {
         else {
                 accessToken = sharedPref.getString("access_token",null);
         }
-        Log.d(TAG, "getAccessToken: Waiting");
         while (accessToken==null){
         }
-        Log.d(TAG, "getAccessToken: "+accessToken);
         return accessToken;
     }
 
     public String getFromSharedPref(){
         accessToken = sharedPref.getString("access_token",null);
-        Log.d(TAG, "getAccessToken: "+accessToken);
         return accessToken;
     }
 

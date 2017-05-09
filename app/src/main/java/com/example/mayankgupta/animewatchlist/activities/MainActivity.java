@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
                 else{
-                    Log.d(TAG, "onAuthStateChanged: not logged in");
                     Intent i = new Intent(MainActivity.this,LoginActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -143,7 +142,6 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             title = savedInstanceState.getString("title");
-            Log.d(TAG, "onCreate: title is "+title);
             fragment = getFragment(title);
             setFragment(fragment,title);
         }
@@ -252,7 +250,6 @@ public class MainActivity extends AppCompatActivity
             title = "Anime Reminders";
 
         }else if (id == R.id.nav_logout) {
-            Log.d(TAG, "onOptionsItemSelected: logout");
             Toast.makeText(this,"Logged Out",Toast.LENGTH_SHORT).show();
             mAuth.signOut();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -56,11 +56,9 @@ public class OnHoldFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         if(searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            Log.d("AL", "onPrepareOptionsMenu: item");
             searchView.setVisibility(View.VISIBLE);
             searchView.setInputType(InputType.TYPE_CLASS_TEXT);
         }if(searchView!=null) {
-            Log.d("AL", "onPrepareOptionsMenu: view");
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -109,14 +107,7 @@ public class OnHoldFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*onHoldList = new ArrayList<>();
-        onHoldList.add(new EntryShort(1,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(2,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(3,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(4,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(5,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(6,220,0,"Naruto","TV","Finished Airing",7.82f,null));
-        onHoldList.add(new EntryShort(7,220,0,"Naruto","TV","Finished Airing",7.82f,null));*/
+
 
         View rootView = inflater.inflate(R.layout.fragment_on_hold, container, false);
         final ProgressBar progressLoader = (ProgressBar) rootView.findViewById(R.id.progressLoader);

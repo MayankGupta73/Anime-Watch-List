@@ -89,7 +89,6 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 .error(R.drawable.n)
                 .into(holder.image);
 
-        Log.d("MW", "onBindViewHolder: "+currentItem.getImage());
 //        holder.image.setImageResource(R.drawable.n);
         if(getItemViewType(position) == 0 && currentItem.getTitle().length()>31)
             holder.tvName.setText(currentItem.getTitle().substring(0,30)+"...");
@@ -130,10 +129,6 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 @Override
                 public void onClick(View v) {
                     //Pass intent to details activity
-                    if(v == holder.image)
-                    Log.d("OL", "onClick: click registered image");
-                    if(v == holder.itemView)
-                        Log.d("OL", "onClick: click registered item view");
 
                     Intent i = new Intent(context, AnimeDetailActivity.class);
                     i.putExtra("listType", listType);
@@ -142,9 +137,11 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     context.startActivity(i);
                 }
             };
-            if(getItemViewType(position) == 0) holder.tvName.setOnClickListener(ocl);
+            if(getItemViewType(position) == 0) {
+                holder.tvName.setOnClickListener(ocl);
+                holder.image.setOnClickListener(ocl);
+            }
             holder.itemView.setOnClickListener(ocl);
-            holder.image.setOnClickListener(ocl);
         }
 
     }

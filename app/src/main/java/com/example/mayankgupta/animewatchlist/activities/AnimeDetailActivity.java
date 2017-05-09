@@ -115,13 +115,11 @@ public class AnimeDetailActivity extends AppCompatActivity {
         anilistAPI = new AnilistAPI(this);
         animeClient = anilistAPI.getAnimeClient();
         if(!anilistAPI.ifTokenExists()) {
-            Log.d(TAG, "onCreateView: fetching token");
             animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
                     .enqueue(new Callback<AuthObj>() {
                         @Override
                         public void onResponse(Call<AuthObj> call, Response<AuthObj> response) {
                             accessToken = response.body().getAccessToken();
-                            Log.d(TAG, "onResponse: " + accessToken);
                             anilistAPI.writeToSharedPref(accessToken);
                             if (!flagAccess){
                                 flagAccess = true;
@@ -138,7 +136,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
         }
         else {
             accessToken = anilistAPI.getFromSharedPref();
-            Log.d(TAG, "onResponse: " + accessToken);
             setAnimeDetails();
         }
 
@@ -188,7 +185,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(final MenuItem item) {
-                        Log.d(TAG, "onMenuItemClick: ");
                         //final String list = getListTypeName(listType);
                         final GenericTypeIndicator<ArrayList<EntryShort>> t = new GenericTypeIndicator<ArrayList<EntryShort>>() {};
 
@@ -222,7 +218,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 if(dataSnapshot.child("current_list").exists())
                                                 pos = (int) dataSnapshot.child("current_list").getChildrenCount();
                                                 else pos =0;
-                                                Log.d(TAG, "onDataChange: current"+pos);
                                                 mRef.child("current_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
 
@@ -258,7 +253,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 if(dataSnapshot.child("completed_list").hasChildren())
                                                 pos = (int) dataSnapshot.child("completed_list").getChildrenCount();
                                                 else pos = 0;
-                                                Log.d(TAG, "onDataChange: completed"+pos);
                                                 mRef.child("completed_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
 
@@ -292,7 +286,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 if(dataSnapshot.child("on_hold_list").exists())
                                                 pos = (int) dataSnapshot.child("on_hold_list").getChildrenCount();
                                                 else pos=0;
-                                                Log.d(TAG, "onDataChange: on hold"+pos);
                                                 mRef.child("on_hold_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
 
@@ -371,7 +364,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
                 .error(R.drawable.n)
                 .into(image);
 
-        Log.d(TAG, "setFields: "+animeDetails.getImage());
 
         tvType.setText(animeDetails.getType());
         tvStatus.setText(animeDetails.getStatus());
@@ -425,7 +417,6 @@ public class AnimeDetailActivity extends AppCompatActivity {
 
             mRef.child(getListTypeName(listType)).child(String.valueOf(position)).child("episodeCount").setValue(episodesWatched);
             tvEpisodeCount.setText(episodesWatched+"/"+totalEpisodes);
-            Log.d("AL", "onClick: ");
         }
     };
 }

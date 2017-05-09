@@ -213,7 +213,7 @@ public class SignupActivity extends AppCompatActivity  {
         }
     }
 
-    void setUsername(String username){
+    void setUsername(final String username){
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                 .setDisplayName(username)
@@ -224,7 +224,7 @@ public class SignupActivity extends AppCompatActivity  {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: Set the username for new user.");
+                            Toast.makeText(getApplicationContext(),"Welcome "+username,Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

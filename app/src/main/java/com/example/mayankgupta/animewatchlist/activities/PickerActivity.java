@@ -131,8 +131,6 @@ public class PickerActivity extends AppCompatActivity {
                 i.putExtra("Minute",mMinute);
                 setResult(RESULT_OK,i);
                 finish();
-
-                Log.d("PA", "onClick: ");
             }
         });
     }

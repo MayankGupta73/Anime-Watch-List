@@ -88,17 +88,13 @@ public class HomeFragment extends Fragment {
 
         anilistAPI = new AnilistAPI(ctx);
         animeClient = anilistAPI.getAnimeClient();
-        Log.d(TAG, "onCreateView: starting token access");
-//        Log.d(TAG, "onCreateView: "+AnilistAPI.clientId+AnilistAPI.clientSecret+AnilistAPI.grantType);
         if(isConnected()) {
             if (!anilistAPI.ifTokenExists()) {
-                Log.d(TAG, "onCreateView: fetching token");
                 animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
                         .enqueue(new Callback<AuthObj>() {
                             @Override
                             public void onResponse(Call<AuthObj> call, Response<AuthObj> response) {
                                 accessToken = response.body().getAccessToken();
-                                Log.d(TAG, "onResponse: " + accessToken);
                                 anilistAPI.writeToSharedPref(accessToken);
                                 if (!flagAccess) {
                                     flagAccess = true;
@@ -114,7 +110,6 @@ public class HomeFragment extends Fragment {
                         });
             } else {
                 accessToken = anilistAPI.getFromSharedPref();
-                Log.d(TAG, "onResponse: " + accessToken);
                 setSeasonalRecycler();
             }
 
@@ -176,7 +171,6 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
                 seasonalList = response.body();
                 if(seasonalList == null) {
-                    Log.d(TAG, "onResponse: 0 size");
                     seasonalList = new ArrayList<EntryShort>();
                 }
                 seasonalRecycler.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));

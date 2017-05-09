@@ -46,11 +46,9 @@ public class AnimeListFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         if(searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
-            Log.d("AL", "onPrepareOptionsMenu: item");
             searchView.setVisibility(View.VISIBLE);
             searchView.setInputType(InputType.TYPE_CLASS_TEXT);
         }if(searchView!=null) {
-            Log.d("AL", "onPrepareOptionsMenu: view");
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {

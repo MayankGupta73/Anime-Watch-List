@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.mayankgupta.animewatchlist.activities.MainActivity;
 import com.example.mayankgupta.animewatchlist.activities.PickerActivity;
 import com.example.mayankgupta.animewatchlist.R;
 import com.example.mayankgupta.animewatchlist.ReminderBroadcastReceiver;

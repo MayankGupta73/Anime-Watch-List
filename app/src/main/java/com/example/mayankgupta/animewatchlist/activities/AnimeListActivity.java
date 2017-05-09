@@ -121,19 +121,16 @@ public class AnimeListActivity extends AppCompatActivity {
 
             if(isConnected()) {
                 if (!anilistAPI.ifTokenExists()) {
-                    Log.d(TAG, "onCreateView: fetching token");
                     animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
                             .enqueue(new Callback<AuthObj>() {
                                 @Override
                                 public void onResponse(Call<AuthObj> call, Response<AuthObj> response) {
                                     accessToken = response.body().getAccessToken();
-                                    Log.d(TAG, "onResponse: " + accessToken);
                                     anilistAPI.writeToSharedPref(accessToken);
                                     if(type == "Search"){
                                         progressLoader.setVisibility(View.INVISIBLE);
                                         tvSearchInfo.setVisibility(View.VISIBLE);
                                         searchFlag = true;
-                                        Log.d(TAG, "onResponse: set searchFlag");
                                     }
                                     else {
                                         setListRecycler(type);
@@ -153,12 +150,10 @@ public class AnimeListActivity extends AppCompatActivity {
                             });
                 } else {
                     accessToken = anilistAPI.getFromSharedPref();
-                    Log.d(TAG, "onResponse: " + accessToken);
                     if(type.equals("Search")){
                         progressLoader.setVisibility(View.INVISIBLE);
                         tvSearchInfo.setVisibility(View.VISIBLE);
                         searchFlag = true;
-                        Log.d(TAG, "onResponse: set searchFlag");
                     }
                     else{
                         searchFlag = false;
@@ -187,7 +182,6 @@ public class AnimeListActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 progressLoader.setVisibility(View.VISIBLE);
-                Log.d(TAG, "onQueryTextSubmit: query "+query);
                 if(query.isEmpty()){
                     Toast.makeText(ctx,"Enter a query",Toast.LENGTH_SHORT).show();
                     progressLoader.setVisibility(View.INVISIBLE);

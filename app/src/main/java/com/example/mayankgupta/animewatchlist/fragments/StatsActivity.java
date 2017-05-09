@@ -63,7 +63,6 @@ public class StatsActivity extends Fragment {
                 numCurrent = dataSnapshot.child("current_list").getChildrenCount();
                 numCompleted = dataSnapshot.child("completed_list").getChildrenCount();
                 numOnHold = dataSnapshot.child("on_hold_list").getChildrenCount();
-                Log.d("Stats", "onDataChange: "+numCurrent+numCompleted+numOnHold);
 
 //                float numTotal = (numCurrent+numCompleted+numOnHold);
 //                numCurrent = (numCurrent/numTotal)*100;
