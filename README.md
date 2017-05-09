@@ -1,4 +1,4 @@
-<b>Otaku List: Android App</b> 
+<h2><b>Otaku List: Android App</b></h2> <br>
 
 Otaku List is an app for all the otakus out there looking to manage their current watch list.
 This app will help you keep count of all the series you are following and is in sync with a online anime database.
