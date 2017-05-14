@@ -17,7 +17,15 @@ https://anilist.co/
 - Set Reminders for your series.
 
 <b>Screenshots</b>
-![alt text](screenshots/ss1.png "Home Page") 
+<br>
+<img src="screenshots/ss1.png" width="200" height="300">
+<img src="screenshots/ss2.png" width="200" height="300">
+<img src="screenshots/ss3.png" width="200" height="300">
+<img src="screenshots/ss4.png" width="200" height="300">
+<br>
+<img src="screenshots/ss5.png" width="200" height="300">
+<img src="screenshots/ss6.png" width="200" height="300">
+<img src="screenshots/ss7.png" width="200" height="300">
 
 <br>
 <b>Developer's Comments:</b>
