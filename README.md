@@ -16,8 +16,11 @@ https://anilist.co/
 - Discover the most popular anime as well as trending series.
 - Set Reminders for your series.
 
-(Screenshots to be added in a while.)
+<br>
+<b>Screenshots</b>
+![ss1](screenshots/ss 1.png "Home Page") 
 
+<br>
 <b>Developer's Comments:</b>
 
 This app is officialy my first attempt at a full-blown app and although to be honest this has been a bit of an efort it was a learning oppurtunity and I thoroughly enjoyed making an app so close to my hobbies.
