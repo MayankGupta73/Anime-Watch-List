@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     public static String title;
     static boolean dbCalledAlready = false;
 
-    public static final String DEFAULT_TITLE = "Anime Watch List";
+    public static final String DEFAULT_TITLE = "Otaku List";
     public static final String STATS_TITLE = "Statistics";
     public static final String CURRENT_TITLE = "Currently Watching";
     public static final String ON_HOLD_TITLE = "On Hold";
@@ -56,9 +56,7 @@ public class MainActivity extends AppCompatActivity
     Fragment fragment = null, prevFragment=null;
 
     public static final String TAG = "MWL";
-
-
-
+    
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
