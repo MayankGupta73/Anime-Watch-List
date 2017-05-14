@@ -16,9 +16,8 @@ https://anilist.co/
 - Discover the most popular anime as well as trending series.
 - Set Reminders for your series.
 
-<br>
 <b>Screenshots</b>
-![ss1](screenshots/ss 1.png "Home Page") 
+![alt text](screenshots/ss1.png "Home Page") 
 
 <br>
 <b>Developer's Comments:</b>
