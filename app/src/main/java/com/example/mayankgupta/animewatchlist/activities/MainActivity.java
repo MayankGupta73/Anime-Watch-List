@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     Fragment fragment = null, prevFragment=null;
 
     public static final String TAG = "MWL";
-    
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
