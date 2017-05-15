@@ -20,7 +20,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 .setColor(Color.BLUE)
                 .setContentTitle("Anime Reminder")
                 .setContentText(animeName+" is about to start!")
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher2);
 
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(123,notifBuilder.build());

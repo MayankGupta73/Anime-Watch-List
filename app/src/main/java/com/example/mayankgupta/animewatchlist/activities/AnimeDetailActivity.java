@@ -50,7 +50,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
 
     Button btnPlus,btnMinus;
     ImageView image;
-    TextView tvName,tvType,tvStatus,tvWatchStatus,tvEpisodeCount,tvEpisodes,tvScore,tvDate,tvSynopsis,tvDuration, tvPopularity, tvGenres, tvSynonyms;
+    TextView tvName,tvType,tvStatus,tvWatchStatus,tvEpisodeCount,tvEpisodes,tvScore,tvDate,tvSynopsis,tvDuration, tvPopularity, tvGenres, tvSynonyms,tvEpisodeLabel;
     ProgressBar progressLoader;
     LinearLayout detailLayout;
 
@@ -105,6 +105,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
         tvSynonyms = (TextView) findViewById(R.id.tvSynonyms);
         tvGenres = (TextView) findViewById(R.id.tvGenres);
         tvSynopsis = (TextView) findViewById(R.id.tvSynopsis);
+        tvEpisodeLabel = (TextView) findViewById(R.id.tvEpisodeLabel);
         btnPlus = (Button) findViewById(R.id.btnPlus);
         btnMinus = (Button) findViewById(R.id.btnMinus);
         image = (ImageView) findViewById(R.id.image);
@@ -355,6 +356,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
             tvEpisodeCount.setVisibility(View.INVISIBLE);
             btnPlus.setVisibility(View.INVISIBLE);
             btnMinus.setVisibility(View.INVISIBLE);
+            tvEpisodeLabel.setVisibility(View.INVISIBLE);
         }
 
         tvName.setText(animeDetails.getTitle());
