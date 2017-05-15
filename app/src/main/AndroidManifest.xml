@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mayankgupta.animewatchlist">
+    package="com.mayank7319.mayankgupta.otakulist">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.mayank7319.mayankgupta.otakulist.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,24 +26,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="com.mayank7319.mayankgupta.otakulist.activities.LoginActivity"
             android:label="@string/title_activity_login2" />
         <activity
-            android:name=".activities.SignupActivity"
+            android:name="com.mayank7319.mayankgupta.otakulist.activities.SignupActivity"
             android:label="@string/title_activity_signup" />
         <activity
-            android:name=".activities.AnimeDetailActivity"
+            android:name="com.mayank7319.mayankgupta.otakulist.activities.AnimeDetailActivity"
             android:label="@string/title_activity_anime_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.PickerActivity" />
+        <activity android:name="com.mayank7319.mayankgupta.otakulist.activities.PickerActivity" />
 
         <receiver
-            android:name=".ReminderBroadcastReceiver"
+            android:name="com.mayank7319.mayankgupta.otakulist.broadcast_receiver.ReminderBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".activities.AnimeListActivity"
+            android:name="com.mayank7319.mayankgupta.otakulist.activities.AnimeListActivity"
             android:label="@string/title_activity_anime_list"
             android:theme="@style/AppTheme.NoActionBar">
 
