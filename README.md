@@ -9,6 +9,9 @@ Note:
 This (unofficially) uses the ANILIST API and Database.
 https://anilist.co/
 
+<br>
+Google Play Store link: https://play.google.com/store/apps/details?id=com.mayank7319.mayankgupta.otakulist
+
 
 <b>Features:</b>
 - Save the anime you are watching to lists comprising various categories.
@@ -26,7 +29,7 @@ https://anilist.co/
 <img src="screenshots/ss5.png" width="200" height="300">
 <img src="screenshots/ss6.png" width="200" height="300">
 <img src="screenshots/ss7.png" width="200" height="300">
-
+<img src="screenshots/ss8.png" width="200" height="300">
 <br>
 <b>Developer's Comments:</b>
 
