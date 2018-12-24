@@ -66,7 +66,12 @@ public class MainActivity extends AppCompatActivity
 //            mDatabase = FirebaseDatabase.getInstance();
 //            mDatabase.setPersistenceEnabled(true);
 //        }
+
         mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() == null){
+            startLogin();
+        }
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -78,11 +83,7 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
                 else{
-                    Intent i = new Intent(MainActivity.this,LoginActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
-//                    finish();
+                    startLogin();
                 }
             }
         };
@@ -123,6 +124,14 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+
+    public void startLogin(){
+        Intent i = new Intent(MainActivity.this,LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+//                    finish();
     }
 
     void initializeFragment(Bundle savedInstanceState){

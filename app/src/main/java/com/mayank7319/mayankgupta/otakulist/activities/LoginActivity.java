@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.mayank7319.mayankgupta.otakulist.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvSignup;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser mCurUser;
+
+    public final String TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        mCurUser = mAuth.getCurrentUser();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -187,6 +193,7 @@ public class LoginActivity extends AppCompatActivity {
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = true;
+
             mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(LoginActivity.this,
                     new OnCompleteListener<AuthResult>() {
                         @Override
@@ -208,6 +215,9 @@ public class LoginActivity extends AppCompatActivity {
                                         .setPositiveButton("Ok",null)
                                         .create();
                                 dialog.show();
+
+                                mAuthTask = false;
+                                showProgress(false);
                             }
                         }
                     });

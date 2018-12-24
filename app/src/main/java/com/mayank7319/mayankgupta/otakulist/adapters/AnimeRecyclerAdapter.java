@@ -3,6 +3,7 @@ package com.mayank7319.mayankgupta.otakulist.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.mayank7319.mayankgupta.otakulist.R;
 import com.mayank7319.mayankgupta.otakulist.activities.AnimeDetailActivity;
+import com.mayank7319.mayankgupta.otakulist.activities.MainActivity;
 import com.mayank7319.mayankgupta.otakulist.models.EntryShort;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +38,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     Context context;
     ArrayList<EntryShort> animeList;
     String listType;
+
+    public final String TAG = this.getClass().getSimpleName();
 
 
     public AnimeRecyclerAdapter(Context context, ArrayList<EntryShort> animeList, String listType) {
@@ -75,10 +79,16 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             return;
 
         String uid;
-        DatabaseReference mRef;
+        DatabaseReference mRef = null;
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        Log.d(TAG, "onBindViewHolder: " + FirebaseAuth.getInstance().getCurrentUser());
+        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+            ((MainActivity) context).startLogin();
+            Log.d(TAG, "onBindViewHolder: login started");
+        }else {
+            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        }
 
         Picasso.with(context)
                 .load(currentItem.getImage())
