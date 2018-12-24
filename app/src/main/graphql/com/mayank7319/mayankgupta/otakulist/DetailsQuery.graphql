@@ -1,6 +1,6 @@
-query SearchQuery($query: String, $type: MediaType) {
+query DetailsQuery($id: Int, $type: MediaType) {
   Page {
-    media(search: $query, type: $type) {
+    media(id: $id, type: $type) {
       id
       title {
         romaji
@@ -11,12 +11,13 @@ query SearchQuery($query: String, $type: MediaType) {
         medium
         large
       }
+      type
+      duration
+      status
       averageScore
       popularity
       episodes
       season
-      hashtag
-      isAdult
       startDate {
         year
         month
@@ -27,6 +28,9 @@ query SearchQuery($query: String, $type: MediaType) {
         month
         day
       }
+      description(asHtml: false)
+      synonyms
+      genres
     }
   }
 }

@@ -97,7 +97,39 @@ public class EntryShort implements Parcelable {
         image = newEntry.getImage();
     }
 
-    public EntryShort(int id, int episodes, int episodeCount,int popularity, String title, String type, String status, float score, String image) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPopularity(int popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setEpisodes(int episodes) {
+        this.episodes = episodes;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public EntryShort(int id, int episodes, int episodeCount, int popularity, String title, String type, String status, float score, String image) {
         this.id = id;
         this.episodes = episodes;
         this.popularity = popularity;

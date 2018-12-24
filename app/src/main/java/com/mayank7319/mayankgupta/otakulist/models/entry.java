@@ -3,6 +3,7 @@ package com.mayank7319.mayankgupta.otakulist.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Mayank Gupta on 18-03-2017.
@@ -116,7 +117,7 @@ public class entry {
     }
 
     private String formatDate(String date){
-        if(date == null)
+        if(date == null || date.equals("") || date.length() < 8)
             return date;
         return date.substring(6,8) + "/" + date.substring(4,6) + "/" + date.substring(0,4);
     }

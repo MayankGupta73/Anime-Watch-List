@@ -19,17 +19,30 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.exception.ApolloException;
+import com.mayank7319.mayankgupta.otakulist.BrowseQuery;
 import com.mayank7319.mayankgupta.otakulist.R;
+import com.mayank7319.mayankgupta.otakulist.SearchQuery;
+import com.mayank7319.mayankgupta.otakulist.SeasonalQuery;
 import com.mayank7319.mayankgupta.otakulist.adapters.AnimeRecyclerAdapter;
 import com.mayank7319.mayankgupta.otakulist.api.AnilistAPI;
+import com.mayank7319.mayankgupta.otakulist.api.AnilistApolloClient;
 import com.mayank7319.mayankgupta.otakulist.api.AnimeClient;
 import com.mayank7319.mayankgupta.otakulist.fragments.HomeFragment;
 import com.mayank7319.mayankgupta.otakulist.models.AuthObj;
 import com.mayank7319.mayankgupta.otakulist.models.EntryShort;
+import com.mayank7319.mayankgupta.otakulist.type.MediaSeason;
+import com.mayank7319.mayankgupta.otakulist.type.MediaSort;
+import com.mayank7319.mayankgupta.otakulist.type.MediaType;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +61,8 @@ public class AnimeListActivity extends AppCompatActivity {
 
     AnilistAPI anilistAPI;
     AnimeClient animeClient;
+    AnilistApolloClient anilistClient;
+    ApolloClient client;
     String accessToken;
     boolean flagAccess = false;
     boolean searchFlag = false;
@@ -116,6 +131,9 @@ public class AnimeListActivity extends AppCompatActivity {
 
         anilistAPI = new AnilistAPI(this);
         animeClient = anilistAPI.getAnimeClient();
+
+        anilistClient = new AnilistApolloClient();
+        client = anilistClient.getApolloClient();
 
         if(i.getBooleanExtra("getData",false)){
 
@@ -188,7 +206,62 @@ public class AnimeListActivity extends AppCompatActivity {
                     return true;
                 }
 
-                animeClient.searchAnime(query.trim(), accessToken).enqueue(new Callback<ArrayList<EntryShort>>() {
+
+                SearchQuery searchQuery = SearchQuery.builder()
+                                                     .query(query.trim())
+                                                     .type(MediaType.ANIME)
+                                                     .build();
+
+                client.query(searchQuery).enqueue(new ApolloCall.Callback<SearchQuery.Data>() {
+                    @Override
+                    public void onResponse(@NotNull com.apollographql.apollo.api.Response<SearchQuery.Data> response) {
+                        List<SearchQuery.Medium> mediaList = response.data().Page().media();
+
+                        animeList = new ArrayList<EntryShort>();
+
+                        if(mediaList == null || mediaList.isEmpty()){
+                            Toast.makeText(ctx,"No items match the query",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for(SearchQuery.Medium medium: mediaList){
+                            if(medium == null){
+                                Log.d(TAG, "onResponse: Medium is Null");
+                            }
+                            else{
+                                Log.d(TAG, "onResponse: Medium "+ medium.toString());
+                            }
+
+                            EntryShort entry = new EntryShort();
+                            assert medium != null;
+                            entry.setId(medium.id());
+                            entry.setEpisodes(medium.episodes() != null?medium.episodes() : 0);
+                            entry.setEpisodeCount(medium.episodes() != null?medium.episodes() : 0);
+                            entry.setPopularity(medium.popularity() != null?medium.popularity() : 0);
+                            entry.setTitle(medium.title().romaji() != null ? medium.title().romaji(): "");
+                            entry.setType(MediaType.ANIME.name());
+                            entry.setStatus(medium.status().name() != null ? medium.status().name(): "");
+                            entry.setScore(medium.averageScore() != null?medium.averageScore() : 0);
+                            entry.setImage(medium.coverImage().large() != null ? medium.coverImage().large(): "");
+
+                            animeList.add(entry);
+                        }
+                        AnimeListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                populateSearchResults();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                });
+
+                /*animeClient.searchAnime(query.trim(), accessToken).enqueue(new Callback<ArrayList<EntryShort>>() {
                     @Override
                     public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
                         animeList = response.body();
@@ -209,7 +282,7 @@ public class AnimeListActivity extends AppCompatActivity {
                     public void onFailure(Call<ArrayList<EntryShort>> call, Throwable t) {
 
                     }
-                });
+                });*/
 
                 return true;
             }
@@ -221,49 +294,160 @@ public class AnimeListActivity extends AppCompatActivity {
         });
     }
 
+    void populateSearchResults(){
+        AnimeRecyclerAdapter adapterSearch = new AnimeRecyclerAdapter(ctx,animeList,"LIST_NEW");
+        listRecycler.setAdapter(adapterSearch);
+        tvSearchInfo.setVisibility(View.INVISIBLE);
+        progressLoader.setVisibility(View.INVISIBLE);
+    }
+
+    void setSeasonalData(SeasonalQuery seasonalQuery){
+        client.query(seasonalQuery).enqueue(new ApolloCall.Callback<SeasonalQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull com.apollographql.apollo.api.Response<SeasonalQuery.Data> response) {
+                List<SeasonalQuery.Medium> mediaList = response.data().Page().media();
+
+                animeList = new ArrayList<EntryShort>();
+
+                if(mediaList == null || mediaList.isEmpty()){
+                    Toast.makeText(ctx,"Unable to fetch data. Please try again later.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for(SeasonalQuery.Medium medium: mediaList){
+                    if(medium == null){
+                        Log.d(TAG, "onResponse: Medium is Null");
+                    }
+                    else{
+                        Log.d(TAG, "onResponse: Medium "+ medium.toString());
+                    }
+
+                    animeList.add(HomeFragment.parseSeasonalApiResponse(medium));
+                }
+                AnimeListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx, animeList, "LIST_NEW");
+                        listRecycler.setAdapter(adapter);
+                        progressLoader.setVisibility(View.GONE);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        });
+
+    }
+
+    void setBrowseData(BrowseQuery popularQuery){
+        client.query(popularQuery).enqueue(new ApolloCall.Callback<BrowseQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull com.apollographql.apollo.api.Response<BrowseQuery.Data> response) {
+                List<BrowseQuery.Medium> mediaList = response.data().Page().media();
+
+                animeList = new ArrayList<EntryShort>();
+
+                if(mediaList == null || mediaList.isEmpty()){
+                    Toast.makeText(ctx,"Unable to fetch data. Please try again later.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for(BrowseQuery.Medium medium: mediaList){
+                    if(medium == null){
+                        Log.d(TAG, "onResponse: Medium is Null");
+                    }
+                    else{
+                        Log.d(TAG, "onResponse: Medium "+ medium.toString());
+                    }
+
+                    animeList.add(HomeFragment.parseBrowseApiResponse(medium));
+                }
+                AnimeListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx, animeList, "LIST_NEW");
+                        listRecycler.setAdapter(adapter);
+                        progressLoader.setVisibility(View.GONE);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        });
+
+    }
+
     void setListRecycler(String listType){
         HashMap queries = new HashMap<>();
         Calendar now =Calendar.getInstance();
+        ArrayList<MediaSort> sort;
 
         switch (listType) {
             case "Top Anime":
-                queries.put("sort", "score-desc");
+                sort = new ArrayList<MediaSort>();
+                sort.add(MediaSort.SCORE_DESC);
+                BrowseQuery topQuery = BrowseQuery.builder()
+                        .type(MediaType.ANIME)
+                        .sort(sort)
+                        .build();
+
+                setBrowseData(topQuery);
                 break;
             case "Popular":
-                queries.put("sort","popularity-desc");
+                sort = new ArrayList<MediaSort>();
+                sort.add(MediaSort.POPULARITY_DESC);
+                BrowseQuery popularQuery = BrowseQuery.builder()
+                        .type(MediaType.ANIME)
+                        .sort(sort)
+                        .build();
+
+                setBrowseData(popularQuery);
                 break;
             case "Seasonal Chart":
-                queries.put("season", HomeFragment.getSeason(now.get(Calendar.MONTH)));
-                queries.put("year",HomeFragment.getYear(now.get(Calendar.YEAR)));
-                queries.put("sort","score-desc");
+                sort= new ArrayList<MediaSort>();
+                sort.add(MediaSort.POPULARITY_DESC);
+                int year = now.get(Calendar.YEAR);
+                Log.d(TAG, "setListRecycler: Now "+ year+ now.get(Calendar.MONTH)+ HomeFragment.getMediaSeason(now.get(Calendar.MONTH)));
+                SeasonalQuery seasonalQuery = SeasonalQuery.builder()
+                        .season(HomeFragment.getMediaSeason(now.get(Calendar.MONTH)))
+                        .seasonYear(year)
+                        .type(MediaType.ANIME)
+                        .sort(sort)
+                        .build();
+
+                setSeasonalData(seasonalQuery);
+
                 break;
             case "Upcoming":
-                queries.put("sort","score-desc");
-                String season = HomeFragment.getSeason(now.get(Calendar.MONTH)+3);
-                queries.put("season",season);
-                int year = season.equals("winter") ? now.get(Calendar.YEAR)+1:now.get(Calendar.YEAR);
-                queries.put("year",HomeFragment.getYear(year));
+                sort= new ArrayList<MediaSort>();
+                sort.add(MediaSort.POPULARITY_DESC);
+                MediaSeason season = HomeFragment.getMediaSeason((now.get(Calendar.MONTH)+3)%12);
+                year = (now.get(Calendar.MONTH) + 3) >= 11? now.get(Calendar.YEAR) + 1: now.get(Calendar.YEAR);
+                Log.d(TAG, "setListRecycler: Upcoming "+ year+ now.get(Calendar.MONTH)+ season);
+                SeasonalQuery upcomingQuery = SeasonalQuery.builder()
+                        .season(season)
+                        .seasonYear(year)
+                        .type(MediaType.ANIME)
+                        .sort(sort)
+                        .build();
+
+                setSeasonalData(upcomingQuery);
+
                 break;
         }
 
-        /*animeClient.browseAnime(accessToken,queries).enqueue(new Callback<ArrayList<EntryShort>>() {
-            @Override
-            public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {
-                animeList = response.body();
-                if(animeList == null)
-                    animeList = new ArrayList<EntryShort>();
-                AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx, animeList, "LIST_NEW");
-                listRecycler.setAdapter(adapter);
-                progressLoader.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onFailure(Call<ArrayList<EntryShort>> call, Throwable t) {
-
-            }
-        });*/
-
-        animeClient.browseAnime(accessToken,queries).enqueue(new Callback() {
+        /*animeClient.browseAnime(accessToken,queries).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
                 animeList = (ArrayList<EntryShort>) response.body();
@@ -278,12 +462,12 @@ public class AnimeListActivity extends AppCompatActivity {
             public void onFailure(Call call, Throwable t) {
 
             }
-        });
+        });*/
 
 
-        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(this, animeList, "LIST_NEW");
+       /* AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(this, animeList, "LIST_NEW");
         listRecycler.setAdapter(adapter);
-        progressLoader.setVisibility(View.GONE);
+        progressLoader.setVisibility(View.GONE);*/
     }
 
 

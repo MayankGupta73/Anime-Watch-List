@@ -1,0 +1,33 @@
+query SeasonalQuery(
+  $page: Int = 1,
+  $type: MediaType,
+  $season: MediaSeason,
+  $seasonYear: Int,
+  $sort: [MediaSort],
+) {
+  Page (page: $page) {
+    media (
+ 	  season: $season,
+      seasonYear: $seasonYear,
+      type: $type,
+      sort: $sort,
+    ) {
+
+      id
+      title {
+        romaji
+        english
+        native
+      }
+      coverImage {
+        medium
+        large
+      }
+      averageScore
+      popularity
+      episodes
+      season
+      status
+    }
+  }
+}

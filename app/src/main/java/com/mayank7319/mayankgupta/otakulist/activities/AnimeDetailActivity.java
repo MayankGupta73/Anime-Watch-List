@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.exception.ApolloException;
+import com.mayank7319.mayankgupta.otakulist.DetailsQuery;
 import com.mayank7319.mayankgupta.otakulist.R;
 import com.mayank7319.mayankgupta.otakulist.api.AnilistAPI;
+import com.mayank7319.mayankgupta.otakulist.api.AnilistApolloClient;
 import com.mayank7319.mayankgupta.otakulist.api.AnimeClient;
 import com.mayank7319.mayankgupta.otakulist.models.AuthObj;
 import com.mayank7319.mayankgupta.otakulist.models.EntryShort;
@@ -32,7 +38,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.mayank7319.mayankgupta.otakulist.type.MediaType;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -321,7 +330,67 @@ public class AnimeDetailActivity extends AppCompatActivity {
     }
 
     void setAnimeDetails(){
-        animeClient.getAnimeDesc(id, accessToken).enqueue(new Callback<entry>() {
+        AnilistApolloClient anilistClient = new AnilistApolloClient();
+        ApolloClient client = anilistClient.getApolloClient();
+
+        DetailsQuery detailsQuery = DetailsQuery.builder()
+                .id(id)
+                .type(MediaType.ANIME)
+                .build();
+
+        client.query(detailsQuery).enqueue(new ApolloCall.Callback<DetailsQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull com.apollographql.apollo.api.Response<DetailsQuery.Data> response) {
+                DetailsQuery.Medium medium = response.data().Page().media().get(0);
+                if(medium == null){
+                    Toast.makeText(AnimeDetailActivity.this,"Could not fetch data. Please try again later.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int id = medium.id();
+                int episodes = medium.episodes() != null? medium.episodes(): 0;
+                int duration = medium.duration() != null? medium.duration(): 0;
+                int popularity = medium.popularity() != null? medium.popularity(): 0;
+                String title = medium.title().romaji() != null ? medium.title().romaji(): "";
+                ArrayList<String> synonyms = new ArrayList<>(medium.synonyms());
+                String type = medium.type().name() != null? medium.type().name(): "";
+                String status = medium.status().name() != null? medium.status().name(): "";
+
+                String startDate = "";
+                if( medium.startDate().year() != null && medium.startDate().month() != null && medium.startDate().day() != null )
+                    startDate = formatDateString(medium.startDate().year(), medium.startDate().month(), medium.startDate().day());
+
+                String endDate = "";
+                if( medium.endDate().year() != null && medium.endDate().month() != null && medium.endDate().day() != null )
+                    endDate = formatDateString(medium.endDate().year(), medium.endDate().month(), medium.endDate().day());
+
+                int score = medium.averageScore() != null? medium.averageScore(): 0;
+                String synopsis = medium.description() != null? medium.description(): "";
+                String image = medium.coverImage().large() != null? medium.coverImage().large() : "";
+                ArrayList<String> genres = new ArrayList<>(medium.genres());
+                final entry animeDetails = new entry(id,episodes,duration,popularity,title,synonyms, type,status, startDate, endDate, score, synopsis, image, genres);
+
+
+                AnimeDetailActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        entryShort = new EntryShort(animeDetails);
+                        anilistUrl = "https://anilist.co/anime/"+ animeDetails.getId();
+                        detailLayout.setVisibility(View.VISIBLE);
+                        setFields(animeDetails);
+                        progressLoader.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        });
+
+
+        /*animeClient.getAnimeDesc(id, accessToken).enqueue(new Callback<entry>() {
             @Override
             public void onResponse(Call<entry> call, Response<entry> response) {
                 entry animeDetails = response.body();
@@ -336,7 +405,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
             public void onFailure(Call<entry> call, Throwable t) {
 
             }
-        });
+        });*/
     }
 
     void setFields(entry animeDetails){
@@ -376,7 +445,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
         else tvDuration.setText(animeDetails.getDuration()+" min");
 
         tvSynopsis.setText(animeDetails.getSynopsis());
-        if(!(animeDetails.getEndDate()==null))
+        if(!animeDetails.getEndDate().equals(""))
         tvDate.setText(animeDetails.getStartDate()+" to "+animeDetails.getEndDate());
         else tvDate.setText(animeDetails.getStartDate()+" to ?");
 
@@ -419,5 +488,11 @@ public class AnimeDetailActivity extends AppCompatActivity {
             tvEpisodeCount.setText(episodesWatched+"/"+totalEpisodes);
         }
     };
+
+    public String formatDateString(Integer year, Integer month, Integer day){
+        String m = month < 10 ? "0" + month: month.toString();
+        String d = day < 10 ? "0" + day: day.toString();
+        return year.toString() + m + d;
+    }
 }
 

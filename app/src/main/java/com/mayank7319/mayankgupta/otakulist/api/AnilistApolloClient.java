@@ -9,6 +9,8 @@ import okhttp3.OkHttpClient;
  */
 
 public class AnilistApolloClient {
+    public AnilistApolloClient() {
+    }
 
     public static final String BASE_URL = "https://graphql.anilist.co";
 

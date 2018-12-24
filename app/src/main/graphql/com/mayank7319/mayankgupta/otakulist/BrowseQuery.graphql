@@ -1,0 +1,29 @@
+query BrowseQuery(
+  $page: Int = 1,
+  $type: MediaType,
+  $sort: [MediaSort],
+) {
+  Page (page: $page) {
+    media (
+      type: $type,
+      sort: $sort,
+    ) {
+
+      id
+      title {
+        romaji
+        english
+        native
+      }
+      coverImage {
+        medium
+        large
+      }
+      averageScore
+      popularity
+      episodes
+      season
+      status
+    }
+  }
+}
