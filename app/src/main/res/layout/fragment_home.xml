@@ -35,15 +35,15 @@
             android:layout_width="80dp">
 
             <TextView
-                android:text="Hey I'm Otaku-Nii !"
-                android:layout_height="wrap_content"
                 android:id="@+id/textView"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:textColor="@android:color/background_light"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:clickable="false" />
+                android:clickable="false"
+                android:padding="10dp"
+                android:text="Hey I'm Otaku-Nii!"
+                android:textColor="@android:color/background_light" />
 
             <TextView
                 android:text="I'm here to help you manage your Anime watch list. "

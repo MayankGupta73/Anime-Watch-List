@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +71,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
     int totalEpisodes = 0;
     int position;
     int id;
+    String animeName = "";
 
     Boolean flagAccess = false;
     String listType;
@@ -181,6 +185,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
                 final PopupMenu popup = new PopupMenu(ctx,view);
                 switch (listType){
                     case NewItem: popup.inflate(R.menu.menu_add); break;
+                    case Horizontal: popup.inflate(R.menu.menu_add); break;
                     case Current: popup.inflate(R.menu.menu_current);
                         break;
                     case Completed: popup.inflate(R.menu.menu_completed);
@@ -227,7 +232,12 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 else pos =0;
                                                 mRef.child("current_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
-
+                                            case Horizontal:
+                                                if(dataSnapshot.child("current_list").exists())
+                                                    pos = (int) dataSnapshot.child("current_list").getChildrenCount();
+                                                else pos =0;
+                                                mRef.child("current_list").child(String.valueOf(pos)).setValue(entryShort);
+                                                break;
                                         }
                                         setTvWatchStatus(Current);
                                         Toast.makeText(getApplicationContext(),"Operation Completed",Toast.LENGTH_SHORT).show();
@@ -263,6 +273,13 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                                 entryShort.setEpisodeCount(entryShort.getEpisodes());
                                                 mRef.child("completed_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
+                                            case Horizontal:
+                                                if(dataSnapshot.child("completed_list").hasChildren())
+                                                    pos = (int) dataSnapshot.child("completed_list").getChildrenCount();
+                                                else pos = 0;
+                                                entryShort.setEpisodeCount(entryShort.getEpisodes());
+                                                mRef.child("completed_list").child(String.valueOf(pos)).setValue(entryShort);
+                                                break;
 
                                         }
                                         setTvWatchStatus(Completed);
@@ -293,6 +310,12 @@ public class AnimeDetailActivity extends AppCompatActivity {
                                             case NewItem:
                                                 if(dataSnapshot.child("on_hold_list").exists())
                                                 pos = (int) dataSnapshot.child("on_hold_list").getChildrenCount();
+                                                else pos=0;
+                                                mRef.child("on_hold_list").child(String.valueOf(pos)).setValue(entryShort);
+                                                break;
+                                            case Horizontal:
+                                                if(dataSnapshot.child("on_hold_list").exists())
+                                                    pos = (int) dataSnapshot.child("on_hold_list").getChildrenCount();
                                                 else pos=0;
                                                 mRef.child("on_hold_list").child(String.valueOf(pos)).setValue(entryShort);
                                                 break;
@@ -351,6 +374,7 @@ public class AnimeDetailActivity extends AppCompatActivity {
                 int duration = medium.duration() != null? medium.duration(): 0;
                 int popularity = medium.popularity() != null? medium.popularity(): 0;
                 String title = medium.title().romaji() != null ? medium.title().romaji(): "";
+                animeName = title;
                 ArrayList<String> synonyms = new ArrayList<>(medium.synonyms());
                 String type = medium.type().name() != null? medium.type().name(): "";
                 String status = medium.status().name() != null? medium.status().name(): "";
@@ -453,6 +477,16 @@ public class AnimeDetailActivity extends AppCompatActivity {
         tvGenres.setText(genres);
         String synonyms = TextUtils.join("\n",animeDetails.getSynonyms());
         tvSynonyms.setText(synonyms);
+
+        setSharingIntent();
+    }
+
+    void setSharingIntent(){
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "Anime: "+ animeName+ "\nLink: "+anilistUrl;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        mShareActionProvider.setShareIntent(sharingIntent);
     }
 
     void setTvWatchStatus(String listType){
@@ -494,5 +528,26 @@ public class AnimeDetailActivity extends AppCompatActivity {
         String d = day < 10 ? "0" + day: day.toString();
         return year.toString() + m + d;
     }
+
+    private ShareActionProvider mShareActionProvider;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.detail_option_menu, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        // Return true to display menu
+        return true;
+
+    }
+
+
 }
 

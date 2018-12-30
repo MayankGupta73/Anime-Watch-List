@@ -1,6 +1,8 @@
 package com.mayank7319.mayankgupta.otakulist.activities;
 
+import android.app.ActivityManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -219,6 +221,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //Toast.makeText(this, "To be implemented later.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -263,6 +268,9 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.nav_logout) {
             Toast.makeText(this,"Logged Out",Toast.LENGTH_SHORT).show();
+            /*if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+            }*/
             mAuth.signOut();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

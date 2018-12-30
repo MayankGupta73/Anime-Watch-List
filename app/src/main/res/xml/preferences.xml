@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="feedback"
+        android:title="Send feedback"
+        android:summary="Report technical issues or suggest new features">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="@string/contact_developer_uri">
+            <extra android:name="android.intent.extra.SUBJECT"
+                android:value="Feedback about Otaku List App" />
+        </intent>
+    </Preference>
+
+    <Preference
+        android:key="delete_db"
+        android:title="Clear all data"
+        android:summary="Delete all data related to the current account.">
+
+    </Preference>
+
+</PreferenceScreen>
