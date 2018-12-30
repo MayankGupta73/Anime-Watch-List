@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/background_light"
-    android:layout_marginRight="5dp"
-    android:layout_height="210dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imgFrame"
     android:layout_width="140dp"
-    android:clickable="true">
+    android:layout_height="210dp"
+    android:layout_marginRight="5dp"
+    android:background="@android:color/background_light"
+    android:clickable="true"
+    android:focusable="auto">
 
     <TextView
-        android:text="Naruto"
-        android:layout_height="wrap_content"
         android:id="@+id/tvName"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:background="@color/background_dim_overlay"
-        android:layout_gravity="bottom"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/background_dim_overlay"
+        android:elevation="1dp"
         android:padding="5dp"
-        android:elevation="1dp" />
+        android:text="Naruto"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
     <ImageView
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/n"
-        android:id="@+id/image"
         android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true" />
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        app:srcCompat="@drawable/n" />
 </FrameLayout>

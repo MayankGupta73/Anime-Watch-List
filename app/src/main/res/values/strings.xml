@@ -29,4 +29,6 @@
 
     <string name="preference_file_name">AnilistAuth</string>
     <string name="title_activity_anime_list">AnimeListActivity</string>
+    <string name="login_password_reset">Forgot your password?</string>
+    <string name="prompt_signup">Don\'t have an account? Sign Up!</string>
 </resources>

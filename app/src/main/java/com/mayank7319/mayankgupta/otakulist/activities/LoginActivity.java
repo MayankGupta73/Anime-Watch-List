@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     Button mEmailSignInButton;
-    TextView tvSignup;
+    TextView tvSignup, tvPasswordReset;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurUser;
@@ -75,7 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+        tvPasswordReset = findViewById(R.id.tvPasswordReset);
+        tvPasswordReset.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this,PasswordResetActivity.class);
+                startActivity(i);
+            }
+        });
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {

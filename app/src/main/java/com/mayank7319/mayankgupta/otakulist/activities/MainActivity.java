@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity
     public static final String ON_HOLD_TITLE = "On Hold";
     public static final String COMPLETED_TITLE = "Completed";
     public static final String REMINDER_TITLE = "Anime Reminders";
+
+    public static final String FRAGMENT_TAG = "MG";
 
     FragmentManager fragMan;
     FragmentTransaction fragTxn;
@@ -136,6 +139,9 @@ public class MainActivity extends AppCompatActivity
 
     void initializeFragment(Bundle savedInstanceState){
         //In case rotated etc.
+        if(fragment == null){
+            Log.d(TAG, "initializeFragment: Fragment was null");
+        }
         fragment = new HomeFragment();
         title = DEFAULT_TITLE;
         if(savedInstanceState == null){
@@ -147,7 +153,8 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             title = savedInstanceState.getString("title");
-            fragment = getFragment(title);
+            //fragment = getFragment(title);
+            fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
             setFragment(fragment,title);
         }
 
@@ -301,7 +308,7 @@ public class MainActivity extends AppCompatActivity
         if(prevFragment!=null)
         fragTxn.remove(prevFragment);
 
-        fragTxn.replace(R.id.navFragment,fragmentSwap);
+        fragTxn.replace(R.id.navFragment,fragmentSwap, FRAGMENT_TAG);
         fragTxn.commit();
         getSupportActionBar().setTitle(title);
     }

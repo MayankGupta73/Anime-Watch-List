@@ -143,13 +143,15 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     i.putExtra("id",currentItem.getId());
                     i.putExtra("position", position);
                     context.startActivity(i);
+
+                    Log.d(TAG, "onClick: Onclick triggered");
                 }
             };
-            if(getItemViewType(position) == 0) {
+            /*if(getItemViewType(position) == 0) {
                 holder.tvName.setOnClickListener(ocl);
                 holder.image.setOnClickListener(ocl);
-            }
-            holder.itemView.setOnClickListener(ocl);
+            }*/
+            //holder.itemView.setOnClickListener(ocl);
         }
 
     }
@@ -165,7 +167,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         return animeList!=null ? animeList.size():0;
     }
 
-    public class AnimeHolder extends RecyclerView.ViewHolder{
+    public class AnimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView tvName, tvTypeStatus, tvEpisodes, tvScore, tvPopularity;
         ImageView image;
         View itemView;
@@ -179,12 +181,28 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             tvScore = (TextView) itemView.findViewById(R.id.tvScore);
             tvPopularity = (TextView) itemView.findViewById(R.id.tvPopularity);
             image = (ImageView) itemView.findViewById(R.id.image);
+
+            itemView.setOnClickListener(this);
         }
 
         public void cleanup(){
             Picasso.with(image.getContext())
                     .cancelRequest(image);
             image.setImageDrawable(null);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            EntryShort currentItem = animeList.get(position);
+
+            Intent i = new Intent(context, AnimeDetailActivity.class);
+            i.putExtra("listType", listType);
+            i.putExtra("id",currentItem.getId());
+            i.putExtra("position", position);
+            context.startActivity(i);
+
+            Log.d(TAG, "onClick: Onclick triggered from viewHolder");
         }
     }
 

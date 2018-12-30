@@ -69,6 +69,8 @@ public class HomeFragment extends Fragment {
     SeasonalQuery seasonalQuery;
     BrowseQuery popularQuery, topQuery;
 
+    boolean ss = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +79,17 @@ public class HomeFragment extends Fragment {
 
         ctx = getContext();
         now = Calendar.getInstance();
+
+        if(savedInstanceState == null){
+            Log.d(TAG, "onCreateView: Saved instance Null");
+            ss = false;
+        }
+        else{
+            Log.d(TAG, "onCreateView: Saved instance Not Null");
+            Log.d(TAG, "onCreateView: SeasonalList "+savedInstanceState.getParcelableArrayList("seasonalList").toString());
+            seasonalList = savedInstanceState.getParcelableArrayList("seasonalList");
+            ss = true;
+        }
 
         ArrayList<MediaSort> sort= new ArrayList<MediaSort>();
         sort.add(MediaSort.POPULARITY_DESC);
@@ -116,6 +129,9 @@ public class HomeFragment extends Fragment {
         client = anilistClient.getApolloClient();
         anilistAPI = new AnilistAPI(ctx);
         animeClient = anilistAPI.getAnimeClient();
+        if(seasonalList == null){
+            Log.d(TAG, "onCreateView: Seasonal List is null");
+        }
         if(isConnected()) {
             if (!anilistAPI.ifTokenExists()) {
                 animeClient.getaccessToken(AnilistAPI.clientId, AnilistAPI.clientSecret, AnilistAPI.grantType)
@@ -181,6 +197,7 @@ public class HomeFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("title",MainActivity.DEFAULT_TITLE);
+        outState.putParcelableArrayList("seasonalList", seasonalList);
     }
 
     boolean isConnected(){
@@ -226,59 +243,79 @@ public class HomeFragment extends Fragment {
     }
 
     void setSeasonalRecycler(SeasonalQuery seasonalQuery){
-        client.query(seasonalQuery).enqueue(new ApolloCall.Callback<SeasonalQuery.Data>() {
-            @Override
-            public void onResponse(@NotNull com.apollographql.apollo.api.Response<SeasonalQuery.Data> response) {
-                List<SeasonalQuery.Medium> mediaList = response.data().Page().media();
+        if(seasonalList != null){
+            Log.d(TAG, "setSeasonalRecycler: Setting seasonal from bundle" + ss);
+            seasonalRecycler.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
+            AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx,seasonalList,"LiST_HORIZONTAL");
 
-                seasonalList = new ArrayList<EntryShort>();
+            seasonalRecycler.setAdapter(adapter);
 
-                if(mediaList == null || mediaList.isEmpty()){
-                    Toast.makeText(ctx,"Unable to fetch data. Please try again later.",Toast.LENGTH_SHORT).show();
-                    return;
+            tvExpandSeasonal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(ctx,AnimeListActivity.class);
+                    i.putExtra("type","Seasonal Chart");
+                    i.putParcelableArrayListExtra("list",seasonalList);
+                    startActivity(i);
+                }
+            });
+
+            setPopularRecycler(popularQuery);
+        }
+        else {
+            Log.d(TAG, "setSeasonalRecycler: Setting seasonal from network" + ss);
+            client.query(seasonalQuery).enqueue(new ApolloCall.Callback<SeasonalQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull com.apollographql.apollo.api.Response<SeasonalQuery.Data> response) {
+                    List<SeasonalQuery.Medium> mediaList = response.data().Page().media();
+
+                    seasonalList = new ArrayList<EntryShort>();
+
+                    if (mediaList == null || mediaList.isEmpty()) {
+                        Toast.makeText(ctx, "Unable to fetch data. Please try again later.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    for (SeasonalQuery.Medium medium : mediaList) {
+                        if (medium == null) {
+                            Log.d(TAG, "onResponse: Medium is Null");
+                        } else {
+                            Log.d(TAG, "onResponse: Medium " + medium.toString());
+                        }
+
+                        seasonalList.add(parseSeasonalApiResponse(medium));
+                    }
+                    ((MainActivity) ctx).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            seasonalRecycler.setLayoutManager(new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false));
+                            AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx, seasonalList, "LiST_HORIZONTAL");
+
+                            seasonalRecycler.setAdapter(adapter);
+
+                            tvExpandSeasonal.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(ctx, AnimeListActivity.class);
+                                    i.putExtra("type", "Seasonal Chart");
+                                    i.putParcelableArrayListExtra("list", seasonalList);
+                                    startActivity(i);
+                                }
+                            });
+
+                            setPopularRecycler(popularQuery);
+                        }
+                    });
+
+
                 }
 
-                for(SeasonalQuery.Medium medium: mediaList){
-                    if(medium == null){
-                        Log.d(TAG, "onResponse: Medium is Null");
-                    }
-                    else{
-                        Log.d(TAG, "onResponse: Medium "+ medium.toString());
-                    }
-
-                    seasonalList.add(parseSeasonalApiResponse(medium));
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    Log.e(TAG, e.getMessage(), e);
                 }
-                ((MainActivity) ctx).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        seasonalRecycler.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
-                        AnimeRecyclerAdapter adapter = new AnimeRecyclerAdapter(ctx,seasonalList,"LiST_HORIZONTAL");
-
-                        seasonalRecycler.setAdapter(adapter);
-
-                        tvExpandSeasonal.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(ctx,AnimeListActivity.class);
-                                i.putExtra("type","Seasonal Chart");
-                                i.putParcelableArrayListExtra("list",seasonalList);
-                                startActivity(i);
-                            }
-                        });
-
-                        setPopularRecycler(popularQuery);
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void onFailure(@NotNull ApolloException e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-        });
-
+            });
+        }
         /*animeClient.browseAnime(accessToken,queriesSeasonal).enqueue(new Callback<ArrayList<EntryShort>>() {
             @Override
             public void onResponse(Call<ArrayList<EntryShort>> call, Response<ArrayList<EntryShort>> response) {

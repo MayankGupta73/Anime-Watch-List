@@ -99,7 +99,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:text="Don't have an account? Sign Up!"
+                android:text="@string/prompt_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvSignup"
@@ -108,6 +108,17 @@
                 android:textSize="18sp"
                 android:fontFamily="sans-serif"
                 android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tvPasswordReset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/login_password_reset"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>
